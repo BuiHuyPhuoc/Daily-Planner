@@ -17,57 +17,63 @@ class _CalendarScreenState extends State<CalendarScreen> {
   DateTime _selectedDay = DateTime.now();
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: CustomAppBar(
-          context: context,
-          title: Center(
-            child: Text(
-              "Lịch",
-              style: GoogleFonts.montserrat(
-                  color: Theme.of(context).colorScheme.onSurface,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold),
-            ),
+    return Scaffold(
+      appBar: CustomAppBar(
+        context: context,
+        title: Center(
+          child: Text(
+            "Lịch",
+            style: GoogleFonts.montserrat(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontSize: 22,
+                fontWeight: FontWeight.bold),
           ),
         ),
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                CustomTableCalendar(
-                  onDaySelected: (selectedDate) {
-                    setState(() {
-                      _selectedDay = selectedDate;
-                    });
-                  },
-                ),
-                SizedBox(height: 14),
-                Container(
-                  child: Text(
-                    "Kế hoạch trong ngày " +
-                        DateFormat('dd/MM/yyyy').format(_selectedDay),
-                    style: GoogleFonts.openSans(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
+      ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              CustomTableCalendar(
+                onDaySelected: (selectedDate) {
+                  setState(() {
+                    _selectedDay = selectedDate;
+                  });
+                },
+              ),
+              SizedBox(height: 14),
+              Container(
+                child: Text(
+                  "Kế hoạch trong ngày " +
+                      DateFormat('dd/MM/yyyy').format(_selectedDay),
+                  style: GoogleFonts.openSans(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
-                SizedBox(height: 10),
-                TaskLabel(context),
-                SizedBox(height: 10),
-                TaskLabel(context),
-                SizedBox(height: 10),
-                TaskLabel(context),
-                SizedBox(height: 75),
-              ],
-            ),
+              ),
+              SizedBox(height: 10),
+              TaskLabel(context),
+              SizedBox(height: 10),
+              TaskLabel(context),
+              SizedBox(height: 10),
+              TaskLabel(context),
+              SizedBox(height: 75),
+            ],
           ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        shape: CircleBorder(),
+        child: Container(
+          margin: EdgeInsets.only(bottom: 70),
+          child: const Icon(Icons.navigation),
         ),
       ),
     );

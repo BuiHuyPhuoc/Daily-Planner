@@ -45,92 +45,90 @@ class _ToDoScreenState extends State<ToDoScreen> {
       (index) => TaskLabel(context),
     );
     SetupData();
-    return SafeArea(
-      child: Scaffold(
-        appBar: CustomAppBar(
-          context: context,
-          title: Center(
-            child: Text(
-              "Công việc",
-              style: GoogleFonts.openSans(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onSurface),
-            ),
+    return Scaffold(
+      appBar: CustomAppBar(
+        context: context,
+        title: Center(
+          child: Text(
+            "Công việc",
+            style: GoogleFonts.openSans(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.onSurface),
           ),
         ),
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(height: 20),
-                Container(
-                  width: double.infinity,
-                  height: 100,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: dateLabels,
-                  ),
+      ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(height: 20),
+              Container(
+                width: double.infinity,
+                height: 100,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: dateLabels,
                 ),
-                Container(
-                  height: 90,
-                  width: double.infinity,
-                  child: Center(
-                    child: ListView.separated(
-                      separatorBuilder: (context, index) => SizedBox(
-                        width: 10,
-                      ),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: _choices.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ChoiceChip(
-                          showCheckmark: false,
-                          label: Text(
-                            _choices[index],
-                            style: GoogleFonts.manrope(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: (_value == index)
-                                  ? Theme.of(context).colorScheme.onPrimary
-                                  : Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                          selectedColor: Theme.of(context).colorScheme.primary,
-                          backgroundColor: Theme.of(context)
-                              .colorScheme
-                              .onPrimary
-                              .withOpacity(0.2),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              side: BorderSide(
-                                  color:
-                                      Theme.of(context).colorScheme.outline)),
-                          selected: _value == index,
-                          onSelected: (bool selected) {
-                            setState(
-                              () {
-                                _value = index;
-                              },
-                            );
-                          },
-                        );
-                      },
+              ),
+              Container(
+                height: 90,
+                width: double.infinity,
+                child: Center(
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) => SizedBox(
+                      width: 10,
                     ),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _choices.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ChoiceChip(
+                        showCheckmark: false,
+                        label: Text(
+                          _choices[index],
+                          style: GoogleFonts.manrope(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: (_value == index)
+                                ? Theme.of(context).colorScheme.onPrimary
+                                : Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                        selectedColor: Theme.of(context).colorScheme.primary,
+                        backgroundColor: Theme.of(context)
+                            .colorScheme
+                            .onPrimary
+                            .withOpacity(0.2),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            side: BorderSide(
+                                color:
+                                    Theme.of(context).colorScheme.outline)),
+                        selected: _value == index,
+                        onSelected: (bool selected) {
+                          setState(
+                            () {
+                              _value = index;
+                            },
+                          );
+                        },
+                      );
+                    },
                   ),
                 ),
-                Column(
-                  children: tasks,
-                ),
-                Container(
-                  height: 65,
-                  color: Colors.transparent,
-                )
-              ],
-            ),
+              ),
+              Column(
+                children: tasks,
+              ),
+              Container(
+                height: 65,
+                color: Colors.transparent,
+              )
+            ],
           ),
         ),
       ),
