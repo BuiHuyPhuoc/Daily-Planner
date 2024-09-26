@@ -71,7 +71,7 @@ class _CustomToastState extends State<CustomToast> {
           SizedBox(
             width: 10,
           ),
-          widget.toastContent()
+          Expanded(child: widget.toastContent())
         ],
       ),
     );
@@ -82,9 +82,9 @@ class WarningToast extends CustomToast {
   WarningToast({
     Key? key,
     required BuildContext context,
-    String content = "",
+    String message = "",
     Duration duration = const Duration(seconds: 2),
-  }) : super(context: context, message: content, duration: duration);
+  }) : super(context: context, message: message, duration: duration);
 
   @override
   BoxDecoration toastDecoration() {
@@ -120,9 +120,9 @@ class SuccessToast extends CustomToast {
   SuccessToast({
     Key? key,
     required BuildContext context,
-    String content = "",
+    String message = "",
     Duration duration = const Duration(seconds: 2),
-  }) : super(context: context, message: content, duration: duration);
+  }) : super(context: context, message: message, duration: duration);
 
   @override
   Widget toastIcon() {

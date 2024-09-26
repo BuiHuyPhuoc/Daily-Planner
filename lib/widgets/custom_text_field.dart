@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 Widget CustomTextField(
     {Icon? prefixIcon,
@@ -9,8 +10,12 @@ Widget CustomTextField(
     IconButton? suffixIcon,
     int maxLines = 1,
     bool readOnly = false,
-    String? value}) {
+    String? value,
+    List<FilteringTextInputFormatter>? inputFormatters,
+    String? Function(String?)? validator}) {
   return TextFormField(
+    validator: validator,
+    inputFormatters: inputFormatters,
     initialValue: value,
     readOnly: readOnly,
     maxLines: maxLines,
@@ -27,7 +32,8 @@ Widget CustomTextField(
         borderRadius: BorderRadius.circular(12),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface, width: 2),
+        borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.onSurface, width: 2),
         borderRadius: BorderRadius.circular(12),
       ),
       errorStyle: TextStyle(color: Theme.of(context).colorScheme.error),
