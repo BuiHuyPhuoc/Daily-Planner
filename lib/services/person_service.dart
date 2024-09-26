@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:daily_planner/class/custom_format.dart';
 import 'package:daily_planner/models/person.dart';
 import 'package:daily_planner/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
 class PersonService {
   static final PersonService _personService = PersonService._internal();

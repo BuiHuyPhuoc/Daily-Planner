@@ -1,13 +1,9 @@
-import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
-
 import 'package:daily_planner/class/custom_format.dart';
 import 'package:daily_planner/models/person.dart';
-import 'package:daily_planner/services/auth_service.dart';
 import 'package:daily_planner/services/person_service.dart';
 import 'package:daily_planner/widgets/custom_app_bar.dart';
 import 'package:daily_planner/widgets/custom_text_field.dart';
 import 'package:daily_planner/widgets/custom_toast.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
