@@ -69,6 +69,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
             ),
           ),
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          shape: CircleBorder(),
+          child: Container(
+            margin: EdgeInsets.only(bottom: 70),
+            child: const Icon(Icons.navigation),
+          ),
+        ),
       ),
     );
   }
