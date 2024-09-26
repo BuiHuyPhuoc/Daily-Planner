@@ -16,6 +16,7 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           leading: IconButton(
@@ -51,7 +52,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   style: GoogleFonts.manrope(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xff1A4D2E),
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 SizedBox(
@@ -61,7 +62,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   "Và bắt đầu quản lý công việc của bạn",
                   style: GoogleFonts.manrope(
                     fontSize: 16,
-                    color: Color(0xff1A4D2E),
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 SizedBox(
@@ -69,14 +70,14 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 CustomTextField(
                     prefixIcon: Icon(Icons.attach_email_rounded,
-                        color: Color(0xff1A4D2E)),
+                        color: Theme.of(context).colorScheme.onSurface,),
                     context: context,
                     hintText: "Email của bạn"),
                 SizedBox(
                   height: 16,
                 ),
                 CustomTextField(
-                  prefixIcon: Icon(Icons.lock, color: Color(0xff1A4D2E)),
+                  prefixIcon: Icon(Icons.lock, color: Theme.of(context).colorScheme.onSurface,),
                   context: context,
                   hintText: "Nhập mật khẩu",
                   obscureText: _isObscure,
@@ -97,7 +98,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   padding: EdgeInsets.symmetric(vertical: 12),
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Color(0xff1A4D2E),
+                    color: Theme.of(context).colorScheme.primary,
                     borderRadius: BorderRadius.circular(100),
                   ),
                   child: Center(
@@ -106,7 +107,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
-                        color: Color(0xffF5EFE6),
+                        color: Theme.of(context).colorScheme.onPrimary,
                       ),
                     ),
                   ),

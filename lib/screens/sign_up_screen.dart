@@ -46,7 +46,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   style: GoogleFonts.manrope(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xff1A4D2E),
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 SizedBox(
@@ -56,7 +56,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   "Cùng sắp xếp công việc của bạn",
                   style: GoogleFonts.manrope(
                     fontSize: 16,
-                    color: Color(0xff1A4D2E),
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 SizedBox(
@@ -65,7 +65,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 CustomTextField(
                     prefixIcon: Icon(
                       Icons.person,
-                      color: Color(0xff1A4D2E),
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                     context: context,
                     hintText: "Họ và tên"),
@@ -73,15 +73,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   height: 10,
                 ),
                 CustomTextField(
-                    prefixIcon: Icon(Icons.attach_email_rounded,
-                        color: Color(0xff1A4D2E)),
+                    prefixIcon: Icon(
+                      Icons.attach_email_rounded,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                     context: context,
                     hintText: "Email của bạn"),
                 SizedBox(
                   height: 10,
                 ),
                 CustomTextField(
-                  prefixIcon: Icon(Icons.lock, color: Color(0xff1A4D2E)),
+                  prefixIcon: Icon(
+                    Icons.lock,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                   context: context,
                   hintText: "Nhập mật khẩu",
                   obscureText: _isObscure,
@@ -99,7 +104,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   height: 10,
                 ),
                 CustomTextField(
-                  prefixIcon: Icon(Icons.lock, color: Color(0xff1A4D2E)),
+                  prefixIcon: Icon(
+                    Icons.lock,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                   context: context,
                   hintText: "Xác nhận mật khẩu",
                   obscureText: _isObscure,
@@ -120,7 +128,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   padding: EdgeInsets.symmetric(vertical: 12),
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Color(0xff1A4D2E),
+                    color: Theme.of(context).colorScheme.primary,
                     borderRadius: BorderRadius.circular(100),
                   ),
                   child: Center(
@@ -129,7 +137,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
-                        color: Color(0xffF5EFE6),
+                        color: Theme.of(context).colorScheme.onPrimary,
                       ),
                     ),
                   ),
@@ -142,5 +150,3 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 }
-
-

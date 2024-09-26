@@ -1,3 +1,4 @@
+import 'package:daily_planner/screens/sign_in_screen.dart';
 import 'package:daily_planner/screens/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,7 +10,7 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         body: Container(
           width: double.infinity,
           padding: EdgeInsets.all(20),
@@ -17,25 +18,40 @@ class WelcomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Expanded(
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("assets/images/to_do_app_icon.png"),
-                    ),
+              Container(
+                width: double.infinity,
+                height: 500,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    alignment: Alignment.center,
+                    image: AssetImage("assets/images/to_do_app_icon_rmbg.png"),
                   ),
                 ),
               ),
-              Text(
-                "Chào mừng đến với \n Daily Planner",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                "Hãy để chúng tôi giúp bạn quản lý thời gian tốt hơn",
-                style: GoogleFonts.montserrat(fontSize: 18),
-                textAlign: TextAlign.center,
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Chào mừng đến với \n Daily Planner",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 26,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      "Hãy để chúng tôi giúp bạn quản lý thời gian tốt hơn",
+                      style: GoogleFonts.montserrat(
+                        fontSize: 18,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               ),
               SizedBox(
                 height: 20,
@@ -43,19 +59,29 @@ class WelcomeScreen extends StatelessWidget {
               Row(
                 children: <Widget>[
                   Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      decoration: BoxDecoration(
-                          color: Color(0xff1A4D2E),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Center(
-                        child: Text(
-                          "Đăng nhập",
-                          style: GoogleFonts.manrope(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xffF5EFE6),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SignInScreen(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.primary,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: Text(
+                            "Đăng nhập",
+                            style: GoogleFonts.manrope(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
                           ),
                         ),
                       ),
@@ -80,7 +106,7 @@ class WelcomeScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                           border: Border.all(
                             width: 1,
-                            color: Color(0xff1A4D2E),
+                            color: Theme.of(context).colorScheme.outline,
                           ),
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -90,7 +116,7 @@ class WelcomeScreen extends StatelessWidget {
                             style: GoogleFonts.manrope(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xff1A4D2E),
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                         ),

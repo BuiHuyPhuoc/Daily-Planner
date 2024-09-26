@@ -1,8 +1,9 @@
 import 'package:daily_planner/screens/to_do_screen.dart';
+import 'package:daily_planner/widgets/custom_app_bar.dart';
+import 'package:daily_planner/widgets/custom_table_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -12,20 +13,19 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
-  DateTime _focusedDay = DateTime.now();
+  // DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          scrolledUnderElevation: 0,
-          backgroundColor: Colors.white,
+        appBar: CustomAppBar(
+          context: context,
           title: Center(
             child: Text(
               "Lịch",
               style: GoogleFonts.montserrat(
-                  color: Color(0xff1A4D2E),
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontSize: 22,
                   fontWeight: FontWeight.bold),
             ),
@@ -34,34 +34,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Container(
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                TableCalendar(
-                  startingDayOfWeek: StartingDayOfWeek.monday,
-                  focusedDay: _focusedDay,
-                  headerStyle: HeaderStyle(
-                      titleCentered: true, formatButtonVisible: false),
-                  daysOfWeekStyle: DaysOfWeekStyle(
-                    weekdayStyle: TextStyle(fontWeight: FontWeight.bold),
-                    weekendStyle: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  calendarStyle: CalendarStyle(
-                    selectedDecoration: BoxDecoration(
-                      color: Color(0xff1A4D2E),
-                      shape: BoxShape.circle,
-                    ),
-                    todayDecoration: BoxDecoration(
-                      color: Color(0xff1A4D2E).withOpacity(0.6),
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  firstDay: DateTime.utc(2010, 10, 16),
-                  lastDay: DateTime.utc(2030, 10, 16),
-                  selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                  onDaySelected: _onDaySelected,
+                CustomTableCalendar(
+                  onDaySelected: (selectedDate) {
+                    setState(() {
+                      _selectedDay = selectedDate;
+                    });
+                  },
                 ),
                 SizedBox(height: 14),
                 Container(
@@ -71,31 +54,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     style: GoogleFonts.openSans(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xff1A4D2E),
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ),
                 SizedBox(height: 10),
-                TaskLabel(),
+                TaskLabel(context),
                 SizedBox(height: 10),
-                TaskLabel(),
+                TaskLabel(context),
                 SizedBox(height: 10),
-                TaskLabel(),
-                SizedBox(height: 65),
+                TaskLabel(context),
+                SizedBox(height: 75),
               ],
             ),
           ),
         ),
       ),
     );
-  }
-
-  _onDaySelected(selectedDay, focusedDay) {
-    if (!isSameDay(selectedDay, _selectedDay)) {
-      setState(() {
-        _selectedDay = selectedDay;
-        _focusedDay = focusedDay;
-      });
-    }
   }
 }

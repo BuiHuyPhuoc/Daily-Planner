@@ -27,7 +27,7 @@ Widget CustomTextField(
         borderRadius: BorderRadius.circular(12),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Color(0xFF1A4D2E), width: 2),
+        borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface, width: 2),
         borderRadius: BorderRadius.circular(12),
       ),
       errorStyle: TextStyle(color: Theme.of(context).colorScheme.error),

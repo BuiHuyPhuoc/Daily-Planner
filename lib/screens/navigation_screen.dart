@@ -13,26 +13,27 @@ class NavigationScreen extends StatefulWidget {
 
 class _NavigationScreenState extends State<NavigationScreen> {
   int _pagePosition = 1;
-  List<Widget> _navigationItems = [
-    Icon(
-      Icons.calendar_month,
-      size: 30,
-      color: Color(0xffE8DFCA),
-    ),
-    Icon(
-      Icons.work,
-      size: 30,
-      color: Color(0xffE8DFCA),
-    ),
-    Icon(
-      Icons.settings,
-      size: 30,
-      color: Color(0xffE8DFCA),
-    ),
-  ];
+
   List<Widget> _pages = [CalendarScreen(), ToDoScreen(), SettingScreen()];
   @override
   Widget build(BuildContext context) {
+    List<Widget> _navigationItems = [
+      Icon(
+        Icons.calendar_month,
+        size: 30,
+        color: Theme.of(context).colorScheme.onPrimary,
+      ),
+      Icon(
+        Icons.work,
+        size: 30,
+        color: Theme.of(context).colorScheme.onPrimary,
+      ),
+      Icon(
+        Icons.settings,
+        size: 30,
+        color: Theme.of(context).colorScheme.onPrimary,
+      ),
+    ];
     return Scaffold(
       extendBody: true,
       body: Stack(
@@ -44,9 +45,9 @@ class _NavigationScreenState extends State<NavigationScreen> {
             right: 0,
             child: CurvedNavigationBar(
               backgroundColor: Colors.transparent,
-              buttonBackgroundColor: Color(0xff4F6F52),
+              buttonBackgroundColor: Theme.of(context).colorScheme.primary,
               index: _pagePosition,
-              color: Color(0xff4F6F52),
+              color: Theme.of(context).colorScheme.primary,
               animationDuration: Duration(milliseconds: 400),
               items: _navigationItems,
               onTap: (index) {

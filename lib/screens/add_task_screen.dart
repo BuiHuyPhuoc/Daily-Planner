@@ -1,3 +1,4 @@
+import 'package:daily_planner/widgets/custom_app_bar.dart';
 import 'package:daily_planner/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -36,7 +37,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
+        appBar: CustomAppBar(
+          context: context,
           leading: IconButton(
             onPressed: () {},
             icon: Icon(Icons.arrow_back),
@@ -61,26 +63,48 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   decoration: BoxDecoration(
                     border: Border.all(
                       width: 1,
-                      color: Color(0xff4F6F52),
+                      color: Theme.of(context).colorScheme.outline,
                     ),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: TableCalendar(
+                    //locale: Locale('vi'),
+                    availableGestures: AvailableGestures.none,
                     startingDayOfWeek: StartingDayOfWeek.monday,
                     focusedDay: _focusedDay,
                     headerStyle: HeaderStyle(
-                        titleCentered: true, formatButtonVisible: false),
+                        titleTextStyle: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                        titleCentered: true,
+                        formatButtonVisible: false),
                     daysOfWeekStyle: DaysOfWeekStyle(
-                      weekdayStyle: TextStyle(fontWeight: FontWeight.bold),
-                      weekendStyle: TextStyle(fontWeight: FontWeight.bold),
+                      weekdayStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onSurface),
+                      weekendStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onSurface),
                     ),
                     calendarStyle: CalendarStyle(
+                      weekendTextStyle: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onSurface),
+                      defaultTextStyle: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onSurface),
                       selectedDecoration: BoxDecoration(
-                        color: Color(0xff1A4D2E),
+                        color: Theme.of(context).colorScheme.primary,
                         shape: BoxShape.circle,
                       ),
                       todayDecoration: BoxDecoration(
-                        color: Color(0xff1A4D2E).withOpacity(0.6),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(0.6),
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -90,39 +114,26 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     onDaySelected: _onDaySelected,
                   ),
                 ),
-                SizedBox(height: 12),
+                SizedBox(height: 20),
                 Text(
                   "Ngày đã chọn",
                   style: GoogleFonts.manrope(
-                      fontSize: 18, fontWeight: FontWeight.bold),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
                 SizedBox(height: 5),
                 CustomTextField(
-                  controller: dateController,
+                    controller: dateController,
                     context: context,
                     readOnly: true),
-                SizedBox(height: 12),
-                Text(
-                  "Tên nhiệm vụ",
-                  style: GoogleFonts.manrope(
-                      fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 5),
-                CustomTextField(context: context, hintText: "Tên nhiệm vụ ..."),
-                SizedBox(height: 10),
-                Text(
-                  "Nội dung nhiệm vụ",
-                  style: GoogleFonts.manrope(
-                      fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 5),
-                CustomTextField(
-                    maxLines: 4, context: context, hintText: "Nội dung ..."),
-                SizedBox(height: 10),
+                SizedBox(height: 20),
                 Text(
                   "Thời gian",
                   style: GoogleFonts.manrope(
-                      fontSize: 18, fontWeight: FontWeight.bold),
+                      fontSize: 18, fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,),
                 ),
                 SizedBox(height: 5),
                 Row(
@@ -133,11 +144,30 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   ],
                 ),
                 SizedBox(height: 20),
+                Text(
+                  "Tên nhiệm vụ",
+                  style: GoogleFonts.manrope(
+                      fontSize: 18, fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,),
+                ),
+                SizedBox(height: 5),
+                CustomTextField(context: context, hintText: "Tên nhiệm vụ ..."),
+                SizedBox(height: 20),
+                Text(
+                  "Nội dung nhiệm vụ",
+                  style: GoogleFonts.manrope(
+                      fontSize: 18, fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,),
+                ),
+                SizedBox(height: 5),
+                CustomTextField(
+                    maxLines: 4, context: context, hintText: "Nội dung ..."),
+                SizedBox(height: 20),
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 12),
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Color(0xff1A4D2E),
+                    color: Theme.of(context).colorScheme.primary,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
@@ -146,11 +176,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
-                        color: Color(0xffF5EFE6),
+                        color: Theme.of(context).colorScheme.onPrimary,
                       ),
                     ),
                   ),
-                )
+                ),
+                SizedBox(height: MediaQuery.of(context).viewInsets.bottom + 20),
               ],
             ),
           ),
@@ -174,6 +205,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               });
             }
           });
+          FocusScope.of(context).requestFocus(new FocusNode());
         },
         child: Container(
           padding: EdgeInsets.all(10),
@@ -181,7 +213,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               width: 1,
-              color: Color(0xff1A4D2E),
+              color: Theme.of(context).colorScheme.outline,
             ),
           ),
           child: Row(
@@ -190,7 +222,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             children: <Widget>[
               Icon(
                 Icons.access_time_rounded,
-                color: Color(0xff1A4D2E),
+                color: Theme.of(context).colorScheme.onSurface,
                 size: 30,
               ),
               SizedBox(width: 5),
@@ -203,7 +235,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     style: GoogleFonts.manrope(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
-                      color: Color(0xff1A4D2E),
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   if (isStart)
@@ -236,7 +268,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         _selectedDay = selectedDay;
         _focusedDay = focusedDay;
         dateController.text =
-        DateFormat("dd/MM/yyyy").format(_selectedDay).toString();
+            DateFormat("dd/MM/yyyy").format(_selectedDay).toString();
       });
     }
   }

@@ -1,5 +1,7 @@
+import 'package:daily_planner/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class ToDoScreen extends StatefulWidget {
   const ToDoScreen({super.key});
@@ -16,7 +18,6 @@ class _ToDoScreenState extends State<ToDoScreen> {
     "Thành công",
     "Kết thúc",
   ];
-  final List<Widget> tasks = List.generate(7, (index) => TaskLabel(),);
   late DateTime firstDayOfWeek;
   late List<Widget> dateLabels;
   _ToDoScreenState({DateTime? firstDayOfWeek}) {
@@ -34,31 +35,34 @@ class _ToDoScreenState extends State<ToDoScreen> {
 
   @override
   void initState() {
-    SetupData();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> tasks = List.generate(
+      7,
+      (index) => TaskLabel(context),
+    );
+    SetupData();
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          scrolledUnderElevation: 0,
-          backgroundColor: Colors.white,
+        appBar: CustomAppBar(
+          context: context,
           title: Center(
             child: Text(
               "Công việc",
-              style: GoogleFonts.manrope(
+              style: GoogleFonts.openSans(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black),
+                  color: Theme.of(context).colorScheme.onSurface),
             ),
           ),
         ),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Container(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.symmetric(horizontal: 10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,21 +95,20 @@ class _ToDoScreenState extends State<ToDoScreen> {
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: (_value == index)
-                                  ? Color(0xffF5EFE6)
-                                  : Color(0xff1A4D2E),
+                                  ? Theme.of(context).colorScheme.onPrimary
+                                  : Theme.of(context).colorScheme.primary,
                             ),
                           ),
-                          selectedColor: Color(0xff1A4D2E),
-                          backgroundColor: Color(0xffF5EFE6),
+                          selectedColor: Theme.of(context).colorScheme.primary,
+                          backgroundColor: Theme.of(context)
+                              .colorScheme
+                              .onPrimary
+                              .withOpacity(0.2),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            side: BorderSide(
-                              color: _value == index
-                                  ? Color(0xff1A4D2E)
-                                  : Color(0xffF5EFE6),
-                              width: 2.0,
-                            ),
-                          ),
+                              borderRadius: BorderRadius.circular(10.0),
+                              side: BorderSide(
+                                  color:
+                                      Theme.of(context).colorScheme.outline)),
                           selected: _value == index,
                           onSelected: (bool selected) {
                             setState(
@@ -135,14 +138,19 @@ class _ToDoScreenState extends State<ToDoScreen> {
   }
 
   Widget DateLabel(DateTime dateTime, int position) {
+    bool _isSameDay = isSameDay(dateTime, DateTime.now());
     return Container(
       width: 50,
       padding: EdgeInsets.only(top: 10, right: 5, left: 5, bottom: 5),
       decoration: BoxDecoration(
-        color: (dateTime == DateTime.now())
-            ? Color(0xff4F6F52)
-            : Color(0xffF5EFE6),
+        color: (_isSameDay)
+            ? Theme.of(context).colorScheme.primary
+            : Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(100),
+        border: Border.all(
+          width: 1,
+          color: Theme.of(context).colorScheme.outline,
+        ),
       ),
       child: Column(
         children: <Widget>[
@@ -151,25 +159,44 @@ class _ToDoScreenState extends State<ToDoScreen> {
               width: 10,
               height: 10,
               decoration: BoxDecoration(
-                color: Colors.black,
+                color: (!_isSameDay)
+                    ? Theme.of(context).colorScheme.onSurface
+                    : Theme.of(context).colorScheme.onPrimary,
                 borderRadius: BorderRadius.circular(100),
               ),
             ),
           ),
           SizedBox(height: 5),
-          Text("Wed"),
+          Text(
+            "Wed",
+            style: TextStyle(
+              fontSize: 16,
+              color: (!_isSameDay)
+                  ? Theme.of(context).colorScheme.onSurface
+                  : Theme.of(context).colorScheme.onPrimary,
+            ),
+          ),
           SizedBox(height: 5),
           Expanded(
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: (!_isSameDay)
+                    ? Theme.of(context).colorScheme.primaryContainer
+                    : Theme.of(context).colorScheme.secondaryContainer,
                 shape: BoxShape.circle,
               ),
               child: Center(
                 child: Text(
                   dateTime.day.toString(),
                   textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: (!_isSameDay)
+                        ? Theme.of(context).colorScheme.onPrimaryContainer
+                        : Theme.of(context).colorScheme.onSecondaryContainer,
+                  ),
                 ),
               ),
             ),
@@ -180,12 +207,16 @@ class _ToDoScreenState extends State<ToDoScreen> {
   }
 }
 
-Widget TaskLabel() {
+Widget TaskLabel(BuildContext context) {
   return Container(
     width: double.infinity,
     padding: EdgeInsets.all(20),
     decoration: BoxDecoration(
-        color: Color(0xffF5EFE6), borderRadius: BorderRadius.circular(10)),
+      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+      borderRadius: BorderRadius.circular(10),
+      border:
+          Border.all(width: 1, color: Theme.of(context).colorScheme.secondary),
+    ),
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -198,6 +229,7 @@ Widget TaskLabel() {
                 style: GoogleFonts.lexendDeca(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ),
@@ -210,18 +242,17 @@ Widget TaskLabel() {
           "Message of the noteeedddd",
           style: GoogleFonts.lexendDeca(
             fontSize: 16,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
-        SizedBox(
-          height: 8,
-        ),
+        SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Icon(
               Icons.timer,
-              color: Color(0xff1A4D2E),
+              color: Theme.of(context).colorScheme.onSurface,
             ),
             SizedBox(width: 5),
             Expanded(
@@ -230,6 +261,7 @@ Widget TaskLabel() {
                   "8:00 - 10:00",
                   style: GoogleFonts.roboto(
                     fontSize: 16,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -237,11 +269,14 @@ Widget TaskLabel() {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  color: Color(0xff1A4D2E)),
+                borderRadius: BorderRadius.circular(100),
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
               child: Text(
                 "DONE",
-                style: TextStyle(color: Color(0xffF5EFE6)),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.surface,
+                ),
               ),
             )
           ],
