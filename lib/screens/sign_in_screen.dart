@@ -1,4 +1,9 @@
+import 'package:daily_planner/models/person.dart';
+import 'package:daily_planner/screens/auth_screen.dart';
+import 'package:daily_planner/services/auth_service.dart';
+import 'package:daily_planner/services/person_service.dart';
 import 'package:daily_planner/widgets/custom_text_field.dart';
+import 'package:daily_planner/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -11,6 +16,22 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   bool _isObscure = true;
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
+
+  @override
+  void initState() {
+    _emailController = new TextEditingController();
+    _passwordController = new TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,15 +90,22 @@ class _SignInScreenState extends State<SignInScreen> {
                   height: 20,
                 ),
                 CustomTextField(
-                    prefixIcon: Icon(Icons.attach_email_rounded,
-                        color: Theme.of(context).colorScheme.onSurface,),
+                    controller: _emailController,
+                    prefixIcon: Icon(
+                      Icons.attach_email_rounded,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                     context: context,
                     hintText: "Email của bạn"),
                 SizedBox(
                   height: 16,
                 ),
                 CustomTextField(
-                  prefixIcon: Icon(Icons.lock, color: Theme.of(context).colorScheme.onSurface,),
+                  controller: _passwordController,
+                  prefixIcon: Icon(
+                    Icons.lock,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                   context: context,
                   hintText: "Nhập mật khẩu",
                   obscureText: _isObscure,
@@ -94,20 +122,23 @@ class _SignInScreenState extends State<SignInScreen> {
                 SizedBox(
                   height: 20,
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "ĐĂNG NHẬP",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: Theme.of(context).colorScheme.onPrimary,
+                GestureDetector(
+                  onTap: () => ValidateAccountAndSignIn(),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "ĐĂNG NHẬP",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
                       ),
                     ),
                   ),
@@ -118,5 +149,52 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
       ),
     );
+  }
+
+  ValidateAccountAndSignIn() async {
+    final String _email = _emailController.text.toString().trim();
+    final String _password = _passwordController.text.toString().trim();
+    if (_email.isEmpty ||
+        _email.length == 0 ||
+        _password.isEmpty ||
+        _password.length == 0) {
+      WarningToast(
+        context: context,
+        message: "Vui lòng nhập đủ thông tin",
+      ).ShowToast();
+      return;
+    } else {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Container(
+            child: Center(
+              child: new CircularProgressIndicator(),
+            ),
+          );
+        },
+      );
+      Person? person = await PersonService()
+          .signInWithEmailAndPassword(email: _email, password: _password);
+      Navigator.pop(context);
+      if (person != null) {
+        SuccessToast(
+          context: context,
+          message: "Đăng nhập thành công",
+        ).ShowToast();
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AuthScreen(),
+            ),
+            (Route<dynamic> route) => false);
+      } else {
+        WarningToast(
+          context: context,
+          message: "Đăng nhập thất bại",
+        ).ShowToast();
+      }
+    }
   }
 }

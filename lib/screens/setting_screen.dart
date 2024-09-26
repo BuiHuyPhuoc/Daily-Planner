@@ -1,3 +1,4 @@
+import 'package:daily_planner/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -10,10 +11,17 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-       backgroundColor: Colors.blue,
-      body: Container(
-        child: Text("Setting Page"),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.blue,
+        body: TextButton(
+          onPressed: () {
+            AuthService().signOut();
+          },
+          child: Center(
+            child: Text("sign out"),
+          ),
+        ),
       ),
     );
   }
