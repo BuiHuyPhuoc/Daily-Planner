@@ -39,25 +39,20 @@ class _NavigationScreenState extends State<NavigationScreen> {
       body: Stack(
         children: [
           _pages[_pagePosition],
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: CurvedNavigationBar(
-              backgroundColor: Colors.transparent,
-              buttonBackgroundColor: Theme.of(context).colorScheme.primary,
-              index: _pagePosition,
-              color: Theme.of(context).colorScheme.primary,
-              animationDuration: Duration(milliseconds: 400),
-              items: _navigationItems,
-              onTap: (index) {
-                setState(() {
-                  _pagePosition = index;
-                });
-              },
-            ),
-          )
         ],
+      ),
+      bottomNavigationBar: CurvedNavigationBar(
+        backgroundColor: Colors.transparent,
+        buttonBackgroundColor: Theme.of(context).colorScheme.primary,
+        index: _pagePosition,
+        color: Theme.of(context).colorScheme.primary,
+        animationDuration: Duration(milliseconds: 400),
+        items: _navigationItems,
+        onTap: (index) {
+          setState(() {
+            _pagePosition = index;
+          });
+        },
       ),
     );
   }

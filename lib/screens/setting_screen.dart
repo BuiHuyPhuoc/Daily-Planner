@@ -11,16 +11,14 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.blue,
-        body: TextButton(
-          onPressed: () {
-            AuthService().signOut();
-          },
-          child: Center(
-            child: Text("sign out"),
-          ),
+    return Scaffold(
+      backgroundColor: Colors.blue,
+      body: TextButton(
+        onPressed: () {
+          AuthService().signOut();
+        },
+        child: Center(
+          child: Text("sign out"),
         ),
       ),
     );
