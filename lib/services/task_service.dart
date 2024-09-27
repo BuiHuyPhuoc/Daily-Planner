@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:daily_planner/models/person.dart';
 import 'package:daily_planner/models/task.dart';
 
 class TaskService {
@@ -16,7 +15,6 @@ class TaskService {
 
   Future<bool> createTask(Task task) async {
     try {
-      print(task.toMap());
       tasks.add(task.toMap());
       return true;
     } catch (e) {
@@ -24,12 +22,34 @@ class TaskService {
     }
   }
 
-  Stream<QuerySnapshot> getTaskByDateTime(DateTime dateTime, Person person) {
+  Stream<QuerySnapshot> getTask(String email) {
+    final querySnapshot =
+        tasks.where("emailMembers", arrayContains: email).snapshots();
+    return querySnapshot;
+  }
+
+  Stream<QuerySnapshot> getTaskByDateTime(DateTime dateTime, String email) {
     final querySnapshot = tasks
         .where("dateTime", isEqualTo: dateTime.millisecondsSinceEpoch)
-        .where("members", arrayContains: person.toMap())
+        .where("emailMembers", arrayContains: email)
         .snapshots();
-    
+
     return querySnapshot;
+  }
+
+  Future<Task?> getTaskById(String id) async {
+    try {
+      final DocumentSnapshot documentSnapshot = await tasks.doc(id).get();
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> data =
+            documentSnapshot.data() as Map<String, dynamic>;
+        Task task = Task.fromMap(data);
+        return task;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw Exception("Some thing went wrong");
+    }
   }
 }

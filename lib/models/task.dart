@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+
 import 'package:daily_planner/models/person.dart';
 import 'package:daily_planner/models/task_status.dart';
 
@@ -10,8 +11,9 @@ class Task {
   String timeStart; // Giờ bắt đầu
   String timeEnd; // Giờ kết thúc
   String location; // Địa điểm
+  List<String> emailMembers; //Lưu email những người tham gia
   List<Person> members; // Những người tham gia thực hiện task
-  List<TaskStatus>? taskHistory; // Lịch sử trạng thái của task
+  List<TaskStatus> taskHistory; // Lịch sử trạng thái của task
   Task({
     required this.dateTime,
     required this.taskTitle,
@@ -19,6 +21,7 @@ class Task {
     required this.timeStart,
     required this.timeEnd,
     required this.location,
+    required this.emailMembers,
     required this.members,
     required this.taskHistory,
   });
@@ -31,10 +34,9 @@ class Task {
       'timeStart': timeStart,
       'timeEnd': timeEnd,
       'location': location,
+      'emailMembers': emailMembers,
       'members': members.map((x) => x.toMap()).toList(),
-      'taskHistory': taskHistory != null
-          ? taskHistory!.map((x) => x.toMap()).toList()
-          : [],
+      'taskHistory': taskHistory.map((x) => x.toMap()).toList()
     };
   }
 
@@ -46,6 +48,11 @@ class Task {
       timeStart: map['timeStart'] as String,
       timeEnd: map['timeEnd'] as String,
       location: map['location'] as String,
+      emailMembers: List<String>.from(
+        ((map['emailMembers'] != null)
+            ? map['emailMembers'] as List<dynamic>
+            : []),
+      ),
       members: List<Person>.from(
         (map['members'] as List<dynamic>).map<Person>(
           (x) => Person.fromMap(x as Map<String, dynamic>),
@@ -63,4 +70,10 @@ class Task {
 
   factory Task.fromJson(String source) =>
       Task.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  String getLastStatus() {
+    TaskStatus lastestStatus =
+        taskHistory.reduce((a, b) => a.dateTime.isAfter(b.dateTime) ? a : b);
+    return lastestStatus.status;
+  }
 }

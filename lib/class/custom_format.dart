@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter/material.dart';
 
 extension EmailValidator on String {
   bool isValidEmail() {
@@ -20,6 +21,10 @@ class StringFormat {
   static String toSha256String(String string) {
     return sha256.convert(utf8.encode(string)).toString();
   }
+
+  static TimeOfDay toTimeOfDay(String timeString) {
+    List<String> splitString = timeString.split(":");
+    return TimeOfDay(
+        hour: int.parse(splitString[0]), minute: int.parse(splitString[1]));
+  }
 }
-
-

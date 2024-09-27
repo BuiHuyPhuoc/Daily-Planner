@@ -1,6 +1,7 @@
 // ignore_for_file: unused_import
 
 import 'dart:async';
+import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_planner/class/const_variable.dart';
 import 'package:daily_planner/models/person.dart';
@@ -10,7 +11,6 @@ import 'package:daily_planner/services/person_service.dart';
 import 'package:daily_planner/services/task_service.dart';
 import 'package:daily_planner/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
-
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -27,45 +27,198 @@ class _ToDoScreenState extends State<ToDoScreen> {
       DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   final List<String> _choices = [
     "Tất cả",
-    "Mới tạo",
+    "Khởi tạo",
     "Đang thực hiện",
-    "Thành công",
     "Kết thúc",
   ];
+  //late Future<Person?> currentPerson;
+  Person? _person = null;
   late DateTime firstDayOfWeek;
   late List<Widget> dateLabels;
+  late var taskQuerySnapshot;
+  List<DateTime> dayHasTask = [];
+
   _ToDoScreenState() {
     DateTime now =
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     this.firstDayOfWeek = now.add(Duration(days: -(now.weekday - 1)));
   }
 
-  void SetupData() async {
-    setState(() {});
-  }
-
   void CreateDateLabel() {
     dateLabels = [];
     for (int i = 0; i <= 6; i++) {
-      dateLabels.add(DateLabel(this.firstDayOfWeek.add(Duration(days: i))));
+      DateTime day = this.firstDayOfWeek.add(Duration(days: i));
+      dateLabels.add(DateLabel(day, dayHasTask.any((value) => value == day)));
+    }
+  }
+
+  Future<void> getCurrentPerson() async {
+    _person = await PersonService().getCurrentPerson();
+    setState(() {});
+    if (_person == null) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (builder) => AuthScreen()),
+        (Route<dynamic> route) => false,
+      );
     }
   }
 
   @override
   void initState() {
-    SetupData();
     super.initState();
+    getCurrentPerson().then((_) {
+      setState(() {});
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    CreateDateLabel();
-    return Scaffold(
-      appBar: CustomAppBar(
-        context: context,
-        title: "Công việc trong tuần",
-      ),
-      body: SingleChildScrollView(
+    if (_person == null) {
+      return Center(child: CircularProgressIndicator());
+    }
+
+    Widget DateLabelArea() {
+      return StreamBuilder<QuerySnapshot>(
+        stream: TaskService().getTask(_person!.email),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            // Clear the list before adding new data
+            dayHasTask.clear();
+
+            // Iterate through documents in the snapshot
+            for (var doc in snapshot.data!.docs) {
+              Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+              // Check if the dateTime field exists in the document
+              if (data['dateTime'] != null) {
+                DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(
+                    data['dateTime'] as int);
+                dayHasTask.add(dateTime); // Add the dateTime to the list
+              }
+            }
+            CreateDateLabel();
+            return Container(
+              width: double.infinity,
+              height: 100,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: dateLabels,
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
+      );
+    }
+
+    Widget FilterArea() {
+      return Container(
+        height: 90,
+        width: double.infinity,
+        child: Center(
+          child: ListView.separated(
+            separatorBuilder: (context, index) => SizedBox(
+              width: 10,
+            ),
+            scrollDirection: Axis.horizontal,
+            itemCount: _choices.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ChoiceChip(
+                showCheckmark: false,
+                label: Text(
+                  _choices[index],
+                  style: PrimaryTextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: (_choiceChipValue == index)
+                        ? Theme.of(context).colorScheme.onPrimary
+                        : Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                selectedColor: Theme.of(context).colorScheme.primary,
+                backgroundColor:
+                    Theme.of(context).colorScheme.onPrimary.withOpacity(0.2),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    side: BorderSide(
+                        color: Theme.of(context).colorScheme.outline)),
+                selected: _choiceChipValue == index,
+                onSelected: (bool selected) {
+                  setState(
+                    () {
+                      _choiceChipValue = index;
+                    },
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      );
+    }
+
+    Widget TaskArea() {
+      return StreamBuilder<QuerySnapshot>(
+        stream: TaskService().getTaskByDateTime(_selectedDay, _person!.email),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+                child: CircularProgressIndicator()); // Hiển thị khi đang tải
+          } else if (snapshot.hasError) {
+            return Center(child: Text("Có lỗi xảy ra: ${snapshot.error}"));
+          } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Center(
+                child: Text("Bạn không có hoạt động trong ngày này."));
+          } else {
+            List<Map<String, dynamic>> tasks = [];
+            //List docQuerySnapshot = snapshot.data!.docs;
+
+            snapshot.data!.docs.forEach(
+              (element) {
+                Map<String, dynamic> data =
+                    element.data() as Map<String, dynamic>;
+                Task getTask = Task.fromMap(data);
+                tasks.add({element.id: getTask.toMap()});
+              },
+            );
+
+            // Sắp xếp tasks
+            tasks.sort((a, b) {
+              DateTime timeA =
+                  DateFormat("HH:mm").parse(a.values.first['timeStart']);
+              DateTime timeB =
+                  DateFormat("HH:mm").parse(b.values.first['timeStart']);
+              return timeA.compareTo(timeB);
+            });
+
+            return ListView.separated(
+              separatorBuilder: (context, index) => SizedBox(height: 10),
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: tasks.length,
+              itemBuilder: (context, index) {
+                var idTask = tasks[index]
+                    .keys
+                    .toString()
+                    .replaceAll('"', '')
+                    .replaceAll('(', '')
+                    .replaceAll(')', '');
+                Task currentTask = Task.fromMap(tasks[index].values.first);
+                return TaskLabel(context, currentTask, idTask);
+              },
+            );
+          }
+        },
+      );
+    }
+
+    Widget CreateScreen() {
+      return SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 10),
@@ -74,60 +227,9 @@ class _ToDoScreenState extends State<ToDoScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               SizedBox(height: 20),
-              Container(
-                width: double.infinity,
-                height: 100,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: dateLabels,
-                ),
-              ),
-              Container(
-                height: 90,
-                width: double.infinity,
-                child: Center(
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) => SizedBox(
-                      width: 10,
-                    ),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _choices.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return ChoiceChip(
-                        showCheckmark: false,
-                        label: Text(
-                          _choices[index],
-                          style: PrimaryTextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: (_choiceChipValue == index)
-                                ? Theme.of(context).colorScheme.onPrimary
-                                : Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                        selectedColor: Theme.of(context).colorScheme.primary,
-                        backgroundColor: Theme.of(context)
-                            .colorScheme
-                            .onPrimary
-                            .withOpacity(0.2),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            side: BorderSide(
-                                color: Theme.of(context).colorScheme.outline)),
-                        selected: _choiceChipValue == index,
-                        onSelected: (bool selected) {
-                          setState(
-                            () {
-                              _choiceChipValue = index;
-                            },
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ),
-              TaskArea(context),
+              DateLabelArea(),
+              FilterArea(),
+              TaskArea(),
               Container(
                 height: 65,
                 color: Colors.transparent,
@@ -135,20 +237,25 @@ class _ToDoScreenState extends State<ToDoScreen> {
             ],
           ),
         ),
+      );
+    }
+
+    return Scaffold(
+      appBar: CustomAppBar(
+        context: context,
+        title: "Công việc trong tuần",
       ),
+      body: CreateScreen(),
     );
   }
 
-  Widget DateLabel(DateTime dateTime) {
+  Widget DateLabel(DateTime dateTime, bool hasTask) {
     bool _isSameDay = isSameDay(dateTime, _selectedDay);
     return GestureDetector(
       onTap: () {
         setState(() {
           _selectedDay = dateTime;
-          SetupData();
         });
-        print(dateTime.millisecondsSinceEpoch);
-        print(dateTime.toString());
       },
       child: Container(
         width: 50,
@@ -165,18 +272,20 @@ class _ToDoScreenState extends State<ToDoScreen> {
         ),
         child: Column(
           children: <Widget>[
-            Center(
-              child: Container(
-                width: 10,
-                height: 10,
-                decoration: BoxDecoration(
-                  color: (!_isSameDay)
-                      ? Theme.of(context).colorScheme.onSurface
-                      : Theme.of(context).colorScheme.onPrimary,
-                  borderRadius: BorderRadius.circular(100),
-                ),
-              ),
-            ),
+            (hasTask)
+                ? Center(
+                    child: Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        color: (!_isSameDay)
+                            ? Theme.of(context).colorScheme.onSurface
+                            : Theme.of(context).colorScheme.onPrimary,
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                    ),
+                  )
+                : SizedBox(height: 10),
             Expanded(
               child: Center(
                 child: Text(
@@ -222,133 +331,14 @@ class _ToDoScreenState extends State<ToDoScreen> {
       ),
     );
   }
+}
 
-//   Future<Widget> TaskArea() async {
-//     Person? getCurrentPerson = await PersonService().getCurrentPerson();
-//     if (getCurrentPerson == null) {
-//       Navigator.pushAndRemoveUntil(
-//           context,
-//           MaterialPageRoute(builder: (builder) => AuthScreen()),
-//           (Route<dynamic> route) => false);
-//     }
-
-//     // Sử dụng FutureBuilder để chờ dữ liệu người dùng
-//     return FutureBuilder<List<Task>>(
-//       future: _getTasksByDateTime(
-//           _selectedDay, getCurrentPerson!), // Tạo hàm mới để lấy tasks
-//       builder: (context, snapshot) {
-//         if (snapshot.connectionState == ConnectionState.waiting) {
-//           return Center(
-//               child: CircularProgressIndicator()); // Hiển thị khi đang tải
-//         } else if (snapshot.hasError) {
-//           return Center(child: Text("Có lỗi xảy ra: ${snapshot.error}"));
-//         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-//           return Center(child: Text("Bạn không có hoạt động trong ngày này."));
-//         } else {
-//           List<Task> tasks = snapshot.data!;
-//           // Sắp xếp tasks
-//           tasks.sort((a, b) {
-//             DateTime timeA = DateFormat("HH:mm").parse(a.timeStart);
-//             DateTime timeB = DateFormat("HH:mm").parse(b.timeStart);
-//             return timeA.compareTo(timeB);
-//           });
-
-//           return ListView.separated(
-//             separatorBuilder: (context, index) => SizedBox(height: 10),
-//             shrinkWrap: true,
-//             scrollDirection: Axis.vertical,
-//             physics: NeverScrollableScrollPhysics(),
-//             itemCount: tasks.length,
-//             itemBuilder: (context, index) {
-//               return TaskLabel(context, tasks[index]);
-//             },
-//           );
-//         }
-//       },
-//     );
-//   }
-
-// // Tạo hàm mới để lấy tasks
-//   Future<List<Task>> _getTasksByDateTime(
-//       DateTime selectedDay, Person currentPerson) async {
-//     List<Task> tasks = [];
-//     final querySnapshot =
-//         await TaskService().getTaskByDateTime(selectedDay, currentPerson);
-//     querySnapshot.forEach((doc) {
-//       for (var doc in doc.docs) {
-//         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-//         Task getTask = Task.fromMap(data);
-//         tasks.add(getTask);
-//       }
-//     });
-//     return tasks; // Trả về danh sách tasks
-//   }
-  Widget TaskArea(BuildContext context) {
-    // Lấy thông tin người dùng
-    return FutureBuilder<Person?>(
-      future: PersonService().getCurrentPerson(),
-      builder: (context, personSnapshot) {
-        if (personSnapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-              child: CircularProgressIndicator()); // Hiển thị khi đang tải
-        } else if (personSnapshot.hasError || personSnapshot.data == null) {
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (builder) => AuthScreen()),
-              (Route<dynamic> route) => false);
-          return Container(); // Đảm bảo trả về một widget
-        }
-
-        Person currentPerson = personSnapshot.data!;
-
-        // Sử dụng StreamBuilder để theo dõi sự thay đổi
-        return StreamBuilder<QuerySnapshot>(
-          stream: TaskService().getTaskByDateTime(_selectedDay, currentPerson),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                  child: CircularProgressIndicator()); // Hiển thị khi đang tải
-            } else if (snapshot.hasError) {
-              return Center(child: Text("Có lỗi xảy ra: ${snapshot.error}"));
-            } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return Center(
-                  child: Text("Bạn không có hoạt động trong ngày này."));
-            } else {
-              List<Task> tasks = [];
-              List docQuerySnapshot = snapshot.data!.docs;
-
-              for (var doc in docQuerySnapshot) {
-                Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-                Task getTask = Task.fromMap(data);
-                tasks.add(getTask);
-              }
-
-              // Sắp xếp tasks
-              tasks.sort((a, b) {
-                DateTime timeA = DateFormat("HH:mm").parse(a.timeStart);
-                DateTime timeB = DateFormat("HH:mm").parse(b.timeStart);
-                return timeA.compareTo(timeB);
-              });
-
-              return ListView.separated(
-                separatorBuilder: (context, index) => SizedBox(height: 10),
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: tasks.length,
-                itemBuilder: (context, index) {
-                  return TaskLabel(context, tasks[index]);
-                },
-              );
-            }
-          },
-        );
-      },
-    );
-  }
-
-  Widget TaskLabel(BuildContext context, Task task) {
-    return Container(
+Widget TaskLabel(BuildContext context, Task task, String taskId) {
+  return GestureDetector(
+    onTap: () {
+      print(taskId);
+    },
+    child: Container(
       width: double.infinity,
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -413,7 +403,7 @@ class _ToDoScreenState extends State<ToDoScreen> {
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
                 child: Text(
-                  "DONE",
+                  task.getLastStatus(),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.surface,
                   ),
@@ -423,6 +413,6 @@ class _ToDoScreenState extends State<ToDoScreen> {
           )
         ],
       ),
-    );
-  }
+    ),
+  );
 }

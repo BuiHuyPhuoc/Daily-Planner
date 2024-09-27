@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:daily_planner/models/person.dart';
 
 class TaskStatus {
+  String? id;
   DateTime dateTime;
   String status;
   Person? person;
