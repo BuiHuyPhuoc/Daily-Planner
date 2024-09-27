@@ -2,6 +2,7 @@ import 'package:daily_planner/class/const_variable.dart';
 import 'package:daily_planner/models/person.dart';
 import 'package:daily_planner/models/task.dart';
 import 'package:daily_planner/models/task_status.dart';
+import 'package:daily_planner/screens/task_detail_sreen.dart';
 import 'package:daily_planner/services/person_service.dart';
 import 'package:daily_planner/services/task_service.dart';
 import 'package:daily_planner/widgets/custom_app_bar.dart';
@@ -82,7 +83,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                           .format(_selectedDay)
                           .toString();
                     });
-                    print(_selectedDay.millisecondsSinceEpoch.toString());
                   },
                 ),
                 SizedBox(height: 20),
@@ -111,9 +111,32 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 SizedBox(height: 5),
                 Row(
                   children: <Widget>[
-                    TimePickerLabel(true),
+                    //TimePickerLabel(true),
+                    TimePickerButton(
+                      context: context,
+                      title: "Giờ bắt đầu",
+                      onTap: (timeOfDay) {
+                        if (timeOfDay != null) {
+                          setState(() {
+                            _timeStart = timeOfDay;
+                          });
+                        }
+                      },
+                      time: _timeStart,
+                    ),
                     SizedBox(width: 10),
-                    TimePickerLabel(false),
+                    TimePickerButton(
+                      context: context,
+                      title: "Giờ kết thúc",
+                      onTap: (timeOfDay) {
+                        if (timeOfDay != null) {
+                          setState(() {
+                            _timeEnd = timeOfDay;
+                          });
+                        }
+                      },
+                      time: _timeEnd,
+                    ),
                   ],
                 ),
                 SizedBox(height: 20),
@@ -315,7 +338,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     TaskStatus firstStatus = new TaskStatus(
       dateTime: DateTime.now(),
       status: "Khởi tạo",
-      person: getCurrentPerson,
+      person: getCurrentPerson!,
     );
     List<TaskStatus> listStatus = [];
     listStatus.add(firstStatus);
@@ -326,7 +349,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         timeStart: _timeStart!.format(context).toString(),
         timeEnd: _timeEnd!.format(context).toString(),
         location: location,
-        members: [getCurrentPerson!],
+        members: [getCurrentPerson],
         emailMembers: [getCurrentPerson.email],
         taskHistory: listStatus);
     showDialog(

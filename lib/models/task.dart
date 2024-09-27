@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:daily_planner/models/person.dart';
 import 'package:daily_planner/models/task_status.dart';
-
 class Task {
   DateTime dateTime; // Ngày thêm task
   String taskTitle; // Title của task
@@ -71,9 +70,18 @@ class Task {
   factory Task.fromJson(String source) =>
       Task.fromMap(json.decode(source) as Map<String, dynamic>);
 
-  String getLastStatus() {
-    TaskStatus lastestStatus =
-        taskHistory.reduce((a, b) => a.dateTime.isAfter(b.dateTime) ? a : b);
-    return lastestStatus.status;
-  }
+  TaskStatus getLastStatus() {
+  // Tạo một bản sao của taskHistory để tránh mất dữ liệu
+  List<TaskStatus> removeUnusedStatus = List.from(taskHistory);
+  
+  // Loại bỏ các TaskStatus có status là "Chỉnh sửa"
+  removeUnusedStatus.removeWhere((item) => item.status == "Chỉnh sửa");
+  
+  // Lấy TaskStatus có ngày lớn nhất
+  TaskStatus lastestStatus = removeUnusedStatus
+      .reduce((a, b) => a.dateTime.isAfter(b.dateTime) ? a : b);
+  
+  return lastestStatus;
+}
+
 }

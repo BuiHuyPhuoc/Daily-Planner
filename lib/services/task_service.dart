@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_planner/models/task.dart';
 
@@ -50,6 +51,14 @@ class TaskService {
       }
     } catch (e) {
       throw Exception("Some thing went wrong");
+    }
+  }
+
+  Future<void> updateTask(Task task, String idTask) {
+    try {
+      return tasks.doc(idTask).update(task.toMap());
+    } catch (error) {
+      throw Exception("Something went wrong");
     }
   }
 }

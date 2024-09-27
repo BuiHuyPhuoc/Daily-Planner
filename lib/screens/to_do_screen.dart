@@ -7,6 +7,7 @@ import 'package:daily_planner/class/const_variable.dart';
 import 'package:daily_planner/models/person.dart';
 import 'package:daily_planner/models/task.dart';
 import 'package:daily_planner/screens/auth_screen.dart';
+import 'package:daily_planner/screens/task_detail_sreen.dart';
 import 'package:daily_planner/services/person_service.dart';
 import 'package:daily_planner/services/task_service.dart';
 import 'package:daily_planner/widgets/custom_app_bar.dart';
@@ -336,7 +337,12 @@ class _ToDoScreenState extends State<ToDoScreen> {
 Widget TaskLabel(BuildContext context, Task task, String taskId) {
   return GestureDetector(
     onTap: () {
-      print(taskId);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (builder) => TaskDetailSreen(idTask: taskId),
+        ),
+      );
     },
     child: Container(
       width: double.infinity,
@@ -403,7 +409,7 @@ Widget TaskLabel(BuildContext context, Task task, String taskId) {
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
                 child: Text(
-                  task.getLastStatus(),
+                  task.getLastStatus().status,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.surface,
                   ),

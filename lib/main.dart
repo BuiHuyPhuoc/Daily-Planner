@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
               data:
                   MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
               child: child!),
-          home: TaskDetailSreen(idTask: "ByyKXZmlMB2YK9XJHboO"),
+          home: NavigationScreen(),
           theme: ThemeProvider.themeData,
         );
       },
