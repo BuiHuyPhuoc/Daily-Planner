@@ -18,6 +18,13 @@ class NavigationScreen extends StatefulWidget {
 }
 
 class _NavigationScreenState extends State<NavigationScreen> {
+  late int? currentPagePosition;
+  @override
+  void initState() {
+    super.initState();
+    currentPagePosition = widget.currentPagePosition;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (FirebaseAuth.instance.currentUser == null) {
@@ -45,23 +52,24 @@ class _NavigationScreenState extends State<NavigationScreen> {
       extendBody: true,
       body: Stack(
         children: [
-          _pages[widget.currentPagePosition],
+          _pages[currentPagePosition ?? 1],
         ],
       ),
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Colors.transparent,
         buttonBackgroundColor: Theme.of(context).colorScheme.primary,
-        index: widget.currentPagePosition,
+        index: currentPagePosition ?? 1,
         color: Theme.of(context).colorScheme.primary,
         animationDuration: Duration(milliseconds: 400),
         items: _navigationItems,
         onTap: (index) {
           setState(() {
-            widget.currentPagePosition = index;
+            currentPagePosition = index;
           });
         },
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: null,
         backgroundColor: Theme.of(context).colorScheme.primary,
         onPressed: () {
           Navigator.push(

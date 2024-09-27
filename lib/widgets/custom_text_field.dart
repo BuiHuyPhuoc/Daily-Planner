@@ -12,7 +12,8 @@ Widget CustomTextField(
     bool readOnly = false,
     String? value,
     List<FilteringTextInputFormatter>? inputFormatters,
-    String? Function(String?)? validator}) {
+    String? Function(String?)? validator,
+    bool enable = true}) {
   return TextFormField(
     validator: validator,
     inputFormatters: inputFormatters,

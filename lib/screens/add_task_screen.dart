@@ -327,6 +327,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         timeEnd: _timeEnd!.format(context).toString(),
         location: location,
         members: [getCurrentPerson!],
+        emailMembers: [getCurrentPerson.email],
         taskHistory: listStatus);
     showDialog(
       context: context,

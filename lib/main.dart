@@ -8,6 +8,7 @@ import 'package:daily_planner/screens/navigation_screen.dart';
 import 'package:daily_planner/screens/setting_screen.dart';
 import 'package:daily_planner/screens/sign_in_screen.dart';
 import 'package:daily_planner/screens/sign_up_screen.dart';
+import 'package:daily_planner/screens/task_detail_sreen.dart';
 import 'package:daily_planner/screens/to_do_screen.dart';
 import 'package:daily_planner/screens/welcome_screen.dart';
 import 'package:daily_planner/theme/theme.dart';
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
               data:
                   MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
               child: child!),
-          home: NavigationScreen(),
+          home: TaskDetailSreen(idTask: "ByyKXZmlMB2YK9XJHboO"),
           theme: ThemeProvider.themeData,
         );
       },
