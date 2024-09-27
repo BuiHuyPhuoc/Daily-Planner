@@ -28,11 +28,22 @@ class PersonService {
     }
   }
 
-  Future<bool> addPerson(Person person) async {
+  Future<Person?> getCurrentPerson() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null){
+      Person? currentPerson = await getPersonByEmail(currentUser.email.toString());
+      return currentPerson;
+    } else {
+      return null;
+    }
+  }
+
+  Future<bool> addPerson({required String email,required String password,required String name}) async {
     try {
       User? user = await AuthService()
-          .createUserWithEmailAndPassword(person.email, person.password);
-      await persons.add(person.toMap());
+          .createUserWithEmailAndPassword(email, password);
+        
+      await persons.add(new Person(email: email, name: name));
       if (user == null) {
         return false;
       }

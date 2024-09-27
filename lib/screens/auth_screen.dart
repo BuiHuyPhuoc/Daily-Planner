@@ -23,9 +23,9 @@ class AuthScreen extends StatelessWidget {
               );
             } else {
               if (snapshot.data == null) {
-                return const WelcomeScreen();
+                return WelcomeScreen();
               } else {
-                return const NavigationScreen();
+                return NavigationScreen();
               }
             }
           },
