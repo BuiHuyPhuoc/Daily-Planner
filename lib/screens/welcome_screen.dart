@@ -1,7 +1,8 @@
+import 'package:daily_planner/class/const_variable.dart';
 import 'package:daily_planner/screens/sign_in_screen.dart';
 import 'package:daily_planner/screens/sign_up_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -44,7 +45,7 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                     Text(
                       "Hãy để chúng tôi giúp bạn quản lý thời gian tốt hơn",
-                      style: GoogleFonts.montserrat(
+                      style: PrimaryTextStyle(
                         fontSize: 18,
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
@@ -77,7 +78,7 @@ class WelcomeScreen extends StatelessWidget {
                         child: Center(
                           child: Text(
                             "Đăng nhập",
-                            style: GoogleFonts.manrope(
+                            style: PrimaryTextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: Theme.of(context).colorScheme.onPrimary,
@@ -113,7 +114,7 @@ class WelcomeScreen extends StatelessWidget {
                         child: Center(
                           child: Text(
                             "Đăng ký",
-                            style: GoogleFonts.manrope(
+                            style: PrimaryTextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: Theme.of(context).colorScheme.onSurface,

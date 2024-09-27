@@ -1,7 +1,8 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:daily_planner/class/const_variable.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 
 // class CustomAppBar extends StatelessWidget {
 //   CustomAppBar({super.key});
@@ -32,7 +33,7 @@ PreferredSizeWidget CustomAppBar({
     leading: leading,
     title: Text(
       title,
-      style: GoogleFonts.manrope(
+      style: PrimaryTextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 22,
         color: Theme.of(context).colorScheme.onSurface,

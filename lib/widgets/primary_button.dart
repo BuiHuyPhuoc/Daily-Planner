@@ -1,5 +1,5 @@
 // import 'package:flutter/material.dart';
-// import 'package:google_fonts/google_fonts.dart';
+// 
 
 // class PrimaryButton extends StatelessWidget {
 //   const PrimaryButton({super.key});
@@ -19,7 +19,7 @@
 //         child: Center(
 //           child: Text(
 //             "Đăng nhập",
-//             style: GoogleFonts.manrope(
+//             style: PrimaryTextStyle(
 //               fontSize: 16,
 //               fontWeight: FontWeight.bold,
 //               color: Color(0xffF5EFE6),

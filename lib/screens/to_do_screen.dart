@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:daily_planner/class/const_variable.dart';
 import 'package:daily_planner/models/person.dart';
 import 'package:daily_planner/models/task.dart';
 import 'package:daily_planner/screens/auth_screen.dart';
@@ -9,7 +10,7 @@ import 'package:daily_planner/services/person_service.dart';
 import 'package:daily_planner/services/task_service.dart';
 import 'package:daily_planner/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -96,7 +97,7 @@ class _ToDoScreenState extends State<ToDoScreen> {
                         showCheckmark: false,
                         label: Text(
                           _choices[index],
-                          style: GoogleFonts.manrope(
+                          style: PrimaryTextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: (_choiceChipValue == index)
@@ -365,7 +366,7 @@ class _ToDoScreenState extends State<ToDoScreen> {
               Expanded(
                 child: Text(
                   task.taskTitle,
-                  style: GoogleFonts.lexendDeca(
+                  style: PrimaryTextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                     color: Theme.of(context).colorScheme.onSurface,
@@ -379,7 +380,7 @@ class _ToDoScreenState extends State<ToDoScreen> {
             overflow: TextOverflow.ellipsis,
             maxLines: 3,
             task.taskDescription,
-            style: GoogleFonts.lexendDeca(
+            style: PrimaryTextStyle(
               fontSize: 16,
               color: Theme.of(context).colorScheme.onSurface,
             ),
@@ -398,7 +399,7 @@ class _ToDoScreenState extends State<ToDoScreen> {
                 child: Container(
                   child: Text(
                     task.timeStart + " - " + task.timeEnd,
-                    style: GoogleFonts.roboto(
+                    style: PrimaryTextStyle(
                       fontSize: 16,
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
