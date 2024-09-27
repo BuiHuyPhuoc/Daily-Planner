@@ -1,7 +1,7 @@
+import 'package:daily_planner/class/const_variable.dart';
 import 'package:daily_planner/widgets/custom_app_bar.dart';
 import 'package:daily_planner/widgets/custom_table_calendar.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class CalendarScreen extends StatefulWidget {
@@ -41,7 +41,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 child: Text(
                   "Kế hoạch trong ngày " +
                       DateFormat('dd/MM/yyyy').format(_selectedDay),
-                  style: GoogleFonts.openSans(
+                  style: PrimaryTextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.onSurface,

@@ -1,10 +1,11 @@
+import 'package:daily_planner/class/const_variable.dart';
 import 'package:daily_planner/models/person.dart';
 import 'package:daily_planner/screens/auth_screen.dart';
 import 'package:daily_planner/services/person_service.dart';
 import 'package:daily_planner/widgets/custom_text_field.dart';
 import 'package:daily_planner/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -69,7 +70,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 Text(
                   "ĐĂNG NHẬP",
-                  style: GoogleFonts.manrope(
+                  style: PrimaryTextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.onSurface,
@@ -80,7 +81,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 Text(
                   "Và bắt đầu quản lý công việc của bạn",
-                  style: GoogleFonts.manrope(
+                  style: PrimaryTextStyle(
                     fontSize: 16,
                     color: Theme.of(context).colorScheme.onSurface,
                   ),

@@ -1,3 +1,4 @@
+import 'package:daily_planner/class/const_variable.dart';
 import 'package:daily_planner/class/custom_format.dart';
 import 'package:daily_planner/models/person.dart';
 import 'package:daily_planner/services/person_service.dart';
@@ -6,7 +7,7 @@ import 'package:daily_planner/widgets/custom_text_field.dart';
 import 'package:daily_planner/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -76,7 +77,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   Text(
                     "TẠO TÀI KHOẢN",
-                    style: GoogleFonts.manrope(
+                    style: PrimaryTextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).colorScheme.onSurface,
@@ -87,7 +88,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   Text(
                     "Cùng sắp xếp công việc của bạn",
-                    style: GoogleFonts.manrope(
+                    style: PrimaryTextStyle(
                       fontSize: 16,
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
@@ -107,7 +108,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     width: double.infinity,
                     child: Text(
                       "Tên phải lớn hơn 3 kí tự",
-                      style: GoogleFonts.roboto(
+                      style: PrimaryTextStyle(
                         fontSize: 14,
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
@@ -162,7 +163,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           "\n    - Ít nhất 6 kí tự  " +
                           "\n    - Kí tự chữ a-z \n    - Kí tự in hoa A-Z  " +
                           "\n    - Kí tự số 0-9 \n    - Kí tự đặc biệt !, @, #, \$, %, \...",
-                      style: GoogleFonts.roboto(
+                      style: PrimaryTextStyle(
                         fontSize: 14,
                         color: Theme.of(context).colorScheme.onSurface,
                       ),

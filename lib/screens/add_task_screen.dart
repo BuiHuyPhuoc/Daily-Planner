@@ -1,3 +1,4 @@
+import 'package:daily_planner/class/const_variable.dart';
 import 'package:daily_planner/models/person.dart';
 import 'package:daily_planner/models/task.dart';
 import 'package:daily_planner/models/task_status.dart';
@@ -9,7 +10,6 @@ import 'package:daily_planner/widgets/custom_text_field.dart';
 import 'package:daily_planner/widgets/custom_toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class AddTaskScreen extends StatefulWidget {
@@ -88,7 +88,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 SizedBox(height: 20),
                 Text(
                   "Ngày đã chọn",
-                  style: GoogleFonts.manrope(
+                  style: PrimaryTextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.onSurface,
@@ -102,7 +102,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 SizedBox(height: 20),
                 Text(
                   "Thời gian",
-                  style: GoogleFonts.manrope(
+                  style: PrimaryTextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.onSurface,
@@ -119,7 +119,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 SizedBox(height: 20),
                 Text(
                   "Tên nhiệm vụ",
-                  style: GoogleFonts.manrope(
+                  style: PrimaryTextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.onSurface,
@@ -134,7 +134,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 SizedBox(height: 20),
                 Text(
                   "Địa điểm",
-                  style: GoogleFonts.manrope(
+                  style: PrimaryTextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.onSurface,
@@ -149,7 +149,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 SizedBox(height: 20),
                 Text(
                   "Nội dung nhiệm vụ",
-                  style: GoogleFonts.manrope(
+                  style: PrimaryTextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.onSurface,
@@ -235,7 +235,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 children: <Widget>[
                   Text(
                     title,
-                    style: GoogleFonts.manrope(
+                    style: PrimaryTextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                       color: Theme.of(context).colorScheme.onSurface,
@@ -245,14 +245,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     if (_timeStart != null)
                       Text(
                         _timeStart!.format(context).toString(),
-                        style: GoogleFonts.manrope(fontSize: 16),
+                        style: PrimaryTextStyle(fontSize: 16),
                       )
                     else
                       Container()
                   else if (_timeEnd != null)
                     Text(
                       _timeEnd!.format(context).toString(),
-                      style: GoogleFonts.manrope(fontSize: 16),
+                      style: PrimaryTextStyle(fontSize: 16),
                     )
                   else
                     Container(),
