@@ -1,4 +1,5 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:daily_planner/screens/add_task_screen.dart';
 import 'package:daily_planner/screens/calendar_screen.dart';
 import 'package:daily_planner/screens/setting_screen.dart';
 import 'package:daily_planner/screens/to_do_screen.dart';
@@ -53,6 +54,23 @@ class _NavigationScreenState extends State<NavigationScreen> {
             _pagePosition = index;
           });
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (builder) => AddTaskScreen(),
+            ),
+          );
+        },
+        shape: CircleBorder(),
+        child: Icon(
+          Icons.add,
+          color: Theme.of(context).colorScheme.onPrimary,
+        ),
+        splashColor: Theme.of(context).colorScheme.shadow,
       ),
     );
   }

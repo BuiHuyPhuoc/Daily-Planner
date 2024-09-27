@@ -10,8 +10,10 @@ class CustomTableCalendar extends StatefulWidget {
 }
 
 class _CustomTableCalendarState extends State<CustomTableCalendar> {
-  DateTime _focusedDay = DateTime.now();
-  DateTime _selectedDay = DateTime.now();
+  DateTime _focusedDay =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime _selectedDay =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -59,10 +61,11 @@ class _CustomTableCalendarState extends State<CustomTableCalendar> {
             shape: BoxShape.circle,
           ),
         ),
-        firstDay: DateTime.utc(2010, 10, 16),
-        lastDay: DateTime.utc(2030, 10, 16),
+        firstDay: DateTime(2010),
+        lastDay: DateTime(2030),
         selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
         onDaySelected: _onDaySelected,
+        
       ),
     );
   }
@@ -70,10 +73,12 @@ class _CustomTableCalendarState extends State<CustomTableCalendar> {
   _onDaySelected(selectedDay, focusedDay) {
     if (!isSameDay(selectedDay, _selectedDay)) {
       setState(() {
-        _selectedDay = selectedDay;
+        DateTime newDateTime = DateTime(selectedDay.year, selectedDay.month, selectedDay.day);
+        _selectedDay = newDateTime;
         _focusedDay = focusedDay;
       });
-      widget.onDaySelected(selectedDay);
+      print("Chọn ngày: " + _selectedDay.millisecondsSinceEpoch.toString());
+      widget.onDaySelected(_selectedDay);
     }
   }
 }

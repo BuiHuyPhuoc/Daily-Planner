@@ -1,15 +1,6 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
-import 'package:flutter/material.dart';
-
-class CustomFormat {
-  static String formatTimeOfDay(TimeOfDay timer) {
-    final String hour = timer.hour.toString().padLeft(2, '0');
-    final String minute = timer.minute.toString().padLeft(2, '0');
-    return '$hour:$minute';
-  }
-}
 
 extension EmailValidator on String {
   bool isValidEmail() {
@@ -30,3 +21,5 @@ class StringFormat {
     return sha256.convert(utf8.encode(string)).toString();
   }
 }
+
+
