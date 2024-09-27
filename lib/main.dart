@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
               data:
                   MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
               child: child!),
-          home: NavigationScreen(),
+          home: AuthScreen(),
           theme: lightMode,
         );
       },

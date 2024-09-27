@@ -34,7 +34,7 @@ class Task {
       'members': members.map((x) => x.toMap()).toList(),
       'taskHistory': taskHistory != null
           ? taskHistory!.map((x) => x.toMap()).toList()
-          : null,
+          : [],
     };
   }
 
@@ -47,17 +47,15 @@ class Task {
       timeEnd: map['timeEnd'] as String,
       location: map['location'] as String,
       members: List<Person>.from(
-        (map['members'] as List<int>).map<Person>(
+        (map['members'] as List<dynamic>).map<Person>(
           (x) => Person.fromMap(x as Map<String, dynamic>),
         ),
       ),
-      taskHistory: map['taskHistory'] != null
-          ? List<TaskStatus>.from(
-              (map['taskHistory'] as List<int>).map<TaskStatus?>(
-                (x) => TaskStatus.fromMap(x as Map<String, dynamic>),
-              ),
-            )
-          : null,
+      taskHistory: List<TaskStatus>.from(
+        (map['taskHistory'] as List<dynamic>).map<TaskStatus?>(
+          (x) => TaskStatus.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
     );
   }
 

@@ -1,4 +1,3 @@
-import 'package:daily_planner/screens/to_do_screen.dart';
 import 'package:daily_planner/widgets/custom_app_bar.dart';
 import 'package:daily_planner/widgets/custom_table_calendar.dart';
 import 'package:flutter/material.dart';
@@ -20,15 +19,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return Scaffold(
       appBar: CustomAppBar(
         context: context,
-        title: Center(
-          child: Text(
-            "Lịch",
-            style: GoogleFonts.montserrat(
-                color: Theme.of(context).colorScheme.onSurface,
-                fontSize: 22,
-                fontWeight: FontWeight.bold),
-          ),
-        ),
+        title: "Lịch",
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -57,13 +48,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
-              TaskLabel(context),
-              SizedBox(height: 10),
-              TaskLabel(context),
-              SizedBox(height: 10),
-              TaskLabel(context),
-              SizedBox(height: 75),
             ],
           ),
         ),

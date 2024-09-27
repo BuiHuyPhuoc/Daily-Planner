@@ -1,9 +1,16 @@
+import 'package:daily_planner/models/person.dart';
+import 'package:daily_planner/models/task.dart';
+import 'package:daily_planner/models/task_status.dart';
+import 'package:daily_planner/services/person_service.dart';
+import 'package:daily_planner/services/task_service.dart';
 import 'package:daily_planner/widgets/custom_app_bar.dart';
+import 'package:daily_planner/widgets/custom_table_calendar.dart';
 import 'package:daily_planner/widgets/custom_text_field.dart';
+import 'package:daily_planner/widgets/custom_toast.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({super.key});
@@ -15,21 +22,33 @@ class AddTaskScreen extends StatefulWidget {
 class _AddTaskScreenState extends State<AddTaskScreen> {
   TimeOfDay? _timeStart;
   TimeOfDay? _timeEnd;
-  DateTime _focusedDay = DateTime.now();
-  DateTime _selectedDay = DateTime.now();
-  late TextEditingController dateController;
+  // DateTime _focusedDay =
+  //     DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime _selectedDay =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+
+  late TextEditingController _dateController;
+  late TextEditingController _taskTitleController;
+  late TextEditingController _taskDecriptionController;
+  late TextEditingController _taskLocationController;
 
   @override
   void initState() {
-    dateController = new TextEditingController();
-    dateController.text =
+    _dateController = new TextEditingController();
+    _taskTitleController = new TextEditingController();
+    _taskDecriptionController = new TextEditingController();
+    _taskLocationController = new TextEditingController();
+    _dateController.text =
         DateFormat("dd/MM/yyyy").format(_selectedDay).toString();
     super.initState();
   }
 
   @override
   void dispose() {
-    dateController.dispose();
+    _dateController.dispose();
+    _taskTitleController.dispose();
+    _taskDecriptionController.dispose();
+    _taskLocationController.dispose();
     super.dispose();
   }
 
@@ -40,16 +59,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         appBar: CustomAppBar(
           context: context,
           leading: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pop(context);
+            },
             icon: Icon(Icons.arrow_back),
           ),
-          title: Center(
-            child: Text(
-              "THÊM NHIỆM VỤ",
-              style: GoogleFonts.manrope(
-                  fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-          ),
+          title: "THÊM NHIỆM VỤ",
           actions: [IconButton(onPressed: () {}, icon: Icon(Icons.more_vert))],
         ),
         body: SingleChildScrollView(
@@ -59,60 +74,16 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 1,
-                      color: Theme.of(context).colorScheme.outline,
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: TableCalendar(
-                    //locale: Locale('vi'),
-                    availableGestures: AvailableGestures.none,
-                    startingDayOfWeek: StartingDayOfWeek.monday,
-                    focusedDay: _focusedDay,
-                    headerStyle: HeaderStyle(
-                        titleTextStyle: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurface,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18),
-                        titleCentered: true,
-                        formatButtonVisible: false),
-                    daysOfWeekStyle: DaysOfWeekStyle(
-                      weekdayStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurface),
-                      weekendStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurface),
-                    ),
-                    calendarStyle: CalendarStyle(
-                      weekendTextStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurface),
-                      defaultTextStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurface),
-                      selectedDecoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary,
-                        shape: BoxShape.circle,
-                      ),
-                      todayDecoration: BoxDecoration(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .primary
-                            .withOpacity(0.6),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    firstDay: DateTime.utc(2010, 10, 16),
-                    lastDay: DateTime.utc(2030, 10, 16),
-                    selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                    onDaySelected: _onDaySelected,
-                  ),
+                CustomTableCalendar(
+                  onDaySelected: (selectedDate) {
+                    setState(() {
+                      _selectedDay = selectedDate;
+                      _dateController.text = DateFormat("dd/MM/yyyy")
+                          .format(_selectedDay)
+                          .toString();
+                    });
+                    print(_selectedDay.millisecondsSinceEpoch.toString());
+                  },
                 ),
                 SizedBox(height: 20),
                 Text(
@@ -125,15 +96,17 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 ),
                 SizedBox(height: 5),
                 CustomTextField(
-                    controller: dateController,
+                    controller: _dateController,
                     context: context,
                     readOnly: true),
                 SizedBox(height: 20),
                 Text(
                   "Thời gian",
                   style: GoogleFonts.manrope(
-                      fontSize: 18, fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onSurface,),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
                 SizedBox(height: 5),
                 Row(
@@ -147,41 +120,71 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 Text(
                   "Tên nhiệm vụ",
                   style: GoogleFonts.manrope(
-                      fontSize: 18, fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onSurface,),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
                 SizedBox(height: 5),
-                CustomTextField(context: context, hintText: "Tên nhiệm vụ ..."),
+                CustomTextField(
+                  controller: _taskTitleController,
+                  context: context,
+                  hintText: "Tên nhiệm vụ ...",
+                ),
+                SizedBox(height: 20),
+                Text(
+                  "Địa điểm",
+                  style: GoogleFonts.manrope(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+                SizedBox(height: 5),
+                CustomTextField(
+                  controller: _taskLocationController,
+                  context: context,
+                  hintText: "Địa điểm diễn ra...",
+                ),
                 SizedBox(height: 20),
                 Text(
                   "Nội dung nhiệm vụ",
                   style: GoogleFonts.manrope(
-                      fontSize: 18, fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onSurface,),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
                 SizedBox(height: 5),
                 CustomTextField(
-                    maxLines: 4, context: context, hintText: "Nội dung ..."),
+                    controller: _taskDecriptionController,
+                    maxLines: 4,
+                    context: context,
+                    hintText: "Nội dung ..."),
                 SizedBox(height: 20),
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "TẠO NHIỆM VỤ",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: Theme.of(context).colorScheme.onPrimary,
+                GestureDetector(
+                  onTap: () async {
+                    ValidateAndAddTask();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "TẠO NHIỆM VỤ",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: MediaQuery.of(context).viewInsets.bottom + 20),
               ],
             ),
           ),
@@ -262,14 +265,94 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     );
   }
 
-  _onDaySelected(selectedDay, focusedDay) {
-    if (!isSameDay(selectedDay, _selectedDay)) {
-      setState(() {
-        _selectedDay = selectedDay;
-        _focusedDay = focusedDay;
-        dateController.text =
-            DateFormat("dd/MM/yyyy").format(_selectedDay).toString();
-      });
+  void ValidateAndAddTask() async {
+    // Get data from text field
+    String taskTitle = _taskTitleController.text.toString().trim();
+    String taskDescription = _taskDecriptionController.text.toString().trim();
+    String location = _taskLocationController.text.toString().trim();
+    if (taskTitle.isEmpty || taskTitle.length == 0) {
+      WarningToast(
+        context: context,
+        message: "Nhập tên nhiệm vụ",
+      ).ShowToast();
+      return;
+    }
+    if (location.isEmpty || location.length == 0) {
+      WarningToast(
+        context: context,
+        message: "Nhập địa điểm",
+      ).ShowToast();
+      return;
+    }
+    if (taskDescription.isEmpty || taskDescription.length == 0) {
+      WarningToast(
+        context: context,
+        message: "Nhập nội dung",
+      ).ShowToast();
+      return;
+    }
+    if (_timeStart == null || _timeStart == null) {
+      WarningToast(
+        context: context,
+        message: "Chọn thời gian bắt đầu và kết thúc",
+      ).ShowToast();
+      return;
+    }
+    if ((_timeStart!.hour + _timeStart!.minute / 60) >
+        (_timeEnd!.hour + _timeEnd!.minute / 60)) {
+      WarningToast(
+        context: context,
+        message: "Thời gian kết thúc lớn hơn thời gian bắt đầu.",
+      ).ShowToast();
+      return;
+    }
+    // Get logged in user
+    final User? getCurrentUser = FirebaseAuth.instance.currentUser;
+    // Get user as Person
+    Person? getCurrentPerson = await PersonService().getPersonByEmail(
+      getCurrentUser!.email.toString(),
+    );
+    TaskStatus firstStatus = new TaskStatus(
+      dateTime: DateTime.now(),
+      status: "Khởi tạo",
+      person: getCurrentPerson,
+    );
+    List<TaskStatus> listStatus = [];
+    listStatus.add(firstStatus);
+    Task newTask = new Task(
+        dateTime: _selectedDay,
+        taskTitle: taskTitle,
+        taskDescription: taskDescription,
+        timeStart: _timeStart!.format(context).toString(),
+        timeEnd: _timeEnd!.format(context).toString(),
+        location: location,
+        members: [getCurrentPerson!],
+        taskHistory: listStatus);
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Container(
+          child: Center(
+            child: new CircularProgressIndicator(),
+          ),
+        );
+      },
+    );
+    bool result = await TaskService().createTask(newTask);
+    Navigator.pop(context);
+    if (result) {
+      SuccessToast(
+        context: context,
+        message: "Thêm nhiệm vụ thành công",
+      ).ShowToast();
+      Navigator.pop(context);
+    } else {
+      WarningToast(
+        context: context,
+        message: "Có lỗi xảy ra khi thêm nhiệm vụ",
+      ).ShowToast();
+      return;
     }
   }
 }

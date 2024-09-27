@@ -277,13 +277,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ).ShowToast();
       return;
     }
-    Person newPerson = new Person(
-        email: _email,
-        name: _name,
-        password: StringFormat.toSha256String(_password));
-
     try {
-      bool addSuccess = await PersonService().addPerson(newPerson);
+      bool addSuccess = await PersonService()
+          .addPerson(name: _name, email: _email, password: _password);
 
       if (addSuccess) {
         SuccessToast(
