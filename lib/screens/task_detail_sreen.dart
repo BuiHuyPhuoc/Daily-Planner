@@ -145,6 +145,19 @@ class _TaskDetailSreenState extends State<TaskDetailSreen> {
           actions: [
             IconButton(
               onPressed: () {
+                if (_task != null) {
+                  if (_task!.getLastStatus().status == "Kết thúc" ||
+                      _task!.getLastStatus().status == "Hoàn thành") {
+                    WarningToast(
+                      context: context,
+                      message: "Công việc đã hoàn thành, không thể chỉnh sửa",
+                    ).ShowToast();
+                    setState(() {
+                      _isEdittingMode = false;
+                    });
+                    return;
+                  }
+                }
                 if (hasNewData()) {
                   showDialog(
                     context: context,
