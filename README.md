@@ -1,16 +1,16 @@
-# daily_planner
+# DAILY PLANNER APPLICATION
 
-A new Flutter project.
+Ứng dụng ghi chú các công việc thực hiện bằng Flutter và Firebase
 
-## Getting Started
+## Chức năng chính
 
-This project is a starting point for a Flutter application.
+- Đăng nhập - đăng ký để lưu thông tin người dùng. Sử dụng SSO để tránh đăng nhập nhiều lần.
+- Thêm công việc/nhiệm vụ. Có thực hiện thông báo đến người dùng bằng Local Notification để thông báo trước 15 phút khi có nhiệm vụ sắp tới.
+- Sử dụng Firebase để lưu nhiệm vụ, dùng StreamQuerySnapshot của Firebase để hiển thị nhiệm vụ theo thời gian.
+- Chuyển đổi giữa các theme màu và chế độ sáng - tối
+- Chức năng theo dõi hành động của nhiệm vụ khi có thay đổi
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Điều chưa làm được - hướng phát triển
+- Lưu nhiệm vụ đa tài khoản. Một nhiệm vụ có thể có nhiều người tham gia
+- Mở rộng thêm nhiều lựa chọn theme màu chủ đạo cho ứng dụng. Thêm chức năng đổi ngôn ngữ
+- Trang thống kê những nhiệm vụ mới, đang thực hiện và đã kết thúc. Thống kê sử dụng biểu đồ trực quan 
