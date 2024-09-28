@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_planner/class/const_variable.dart';
 import 'package:daily_planner/models/person.dart';
 import 'package:daily_planner/models/task.dart';
+import 'package:daily_planner/models/task_status.dart';
 import 'package:daily_planner/screens/auth_screen.dart';
 import 'package:daily_planner/screens/task_detail_sreen.dart';
 import 'package:daily_planner/services/person_service.dart';
@@ -36,7 +37,7 @@ class _ToDoScreenState extends State<ToDoScreen> {
   Person? _person = null;
   late DateTime firstDayOfWeek;
   late List<Widget> dateLabels;
-  late var taskQuerySnapshot;
+  //late var taskQuerySnapshot;
   List<DateTime> dayHasTask = [];
 
   _ToDoScreenState() {
@@ -196,6 +197,22 @@ class _ToDoScreenState extends State<ToDoScreen> {
               return timeA.compareTo(timeB);
             });
 
+            if (_choiceChipValue != 0) {
+              tasks.removeWhere((item) {
+                Task task = Task.fromMap(item.values.first);
+                switch (_choiceChipValue) {
+                  case 1:
+                    return !(task.getLastStatus().status == "Khởi tạo");
+                  case 2:
+                    return !(task.getLastStatus().status == "Đang thực hiện");
+                  case 3:
+                    return !(task.getLastStatus().status == "Kết thúc" || task.getLastStatus().status == "Hoàn thành");
+                  default:
+                    return true;
+                }
+              });
+            }
+
             return ListView.separated(
               separatorBuilder: (context, index) => SizedBox(height: 10),
               shrinkWrap: true,
@@ -242,6 +259,7 @@ class _ToDoScreenState extends State<ToDoScreen> {
     }
 
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: CustomAppBar(
         context: context,
         title: "Công việc trong tuần",

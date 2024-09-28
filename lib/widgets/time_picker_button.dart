@@ -30,7 +30,7 @@ class _TimePickerButtonState extends State<TimePickerButton> {
         if (widget.isDisable) {
           NotifyToast(
             context: context,
-            message: "Chế độ chỉnh sửa đang tắt",
+            message: "Không được chỉnh sửa giờ",
           ).ShowToast();
           return;
         } else {

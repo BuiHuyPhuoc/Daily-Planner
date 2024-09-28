@@ -3,13 +3,13 @@ import 'package:daily_planner/class/local_notifications.dart';
 import 'package:daily_planner/models/person.dart';
 import 'package:daily_planner/models/task.dart';
 import 'package:daily_planner/models/task_status.dart';
-import 'package:daily_planner/screens/task_detail_sreen.dart';
 import 'package:daily_planner/services/person_service.dart';
 import 'package:daily_planner/services/task_service.dart';
 import 'package:daily_planner/widgets/custom_app_bar.dart';
 import 'package:daily_planner/widgets/custom_table_calendar.dart';
 import 'package:daily_planner/widgets/custom_text_field.dart';
 import 'package:daily_planner/widgets/custom_toast.dart';
+import 'package:daily_planner/widgets/time_picker_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -58,6 +58,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: CustomAppBar(
           context: context,
           leading: IconButton(

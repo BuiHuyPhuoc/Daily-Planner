@@ -43,11 +43,39 @@ class _SettingScreenState extends State<SettingScreen> {
                         top: 70, right: 10, left: 10, bottom: 10),
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.blueGrey[100],
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+                        Center(
+                          child: Text(
+                            "MÀU CHỦ ĐẠO",
+                            style: PrimaryTextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: Theme.of(context).colorScheme.primary),
+                          ),
+                        ),
+                        Container(
+                          height: 30,
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: listColorScheme.length,
+                            itemBuilder: (context, index) {
+                              return ChangeColorThemeButton(context, index);
+                            },
+                            separatorBuilder: (context, index) => SizedBox(
+                              width: 10,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10),
                         SettingFieldButton(
                           leadingIcon: Icons.dark_mode,
                           context: context,
@@ -158,6 +186,25 @@ class _SettingScreenState extends State<SettingScreen> {
             ),
             actions ?? SizedBox()
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget ChangeColorThemeButton(BuildContext context, int themeIndex) {
+    return GestureDetector(
+      onTap: () {
+        // Lưu chỉ số `ColorScheme` và cập nhật giao diện ngay lập tức
+        // Thay đổi `ColorScheme` và cập nhật giao diện
+        Provider.of<ThemeProvider>(context, listen: false)
+            .changeColorScheme(themeIndex);
+      },
+      child: Container(
+        height: 30,
+        width: 30,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: listColorScheme[themeIndex].primary,
         ),
       ),
     );

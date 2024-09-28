@@ -28,7 +28,7 @@ Widget CustomTextField(
       prefixIcon: prefixIcon,
       suffixIcon: suffixIcon,
       hintText: hintText,
-      hintStyle: const TextStyle(),
+      hintStyle: TextStyle(color: Theme.of(context).colorScheme.primary.withOpacity(0.8)),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
       ),
