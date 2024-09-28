@@ -40,16 +40,19 @@ class PersonService {
 
   Future<bool> addPerson({required String email,required String password,required String name}) async {
     try {
-      User? user = await AuthService()
-          .createUserWithEmailAndPassword(email, password);
-        
-      await persons.add(new Person(email: email, name: name));
-      if (user == null) {
+      User? user = await AuthService().createUserWithEmailAndPassword(email, password);
+     
+      if (user != null) {
+        await persons.doc(user.uid).set({
+          'email': email,
+          'name': name,
+        });
+        return true;
+      } else {
         return false;
       }
-      return true;
-    } catch (onError) {
-      throw Exception(onError.toString());
+    } catch (e) {
+      throw Exception('Đăng ký thất bại: ${e.toString()}');
     }
   }
 

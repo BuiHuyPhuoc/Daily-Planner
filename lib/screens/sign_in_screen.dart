@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:daily_planner/class/const_variable.dart';
 import 'package:daily_planner/models/person.dart';
 import 'package:daily_planner/screens/auth_screen.dart';
@@ -6,10 +8,13 @@ import 'package:daily_planner/widgets/custom_app_bar.dart';
 import 'package:daily_planner/widgets/custom_text_field.dart';
 import 'package:daily_planner/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter/services.dart';
 
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
+  SignInScreen({super.key, this.email = "", this.password = ""});
+
+  String email;
+  String password;
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();
@@ -24,6 +29,8 @@ class _SignInScreenState extends State<SignInScreen> {
   void initState() {
     _emailController = new TextEditingController();
     _passwordController = new TextEditingController();
+    _emailController.text = widget.email;
+    _passwordController.text = widget.password;
     super.initState();
   }
 
@@ -92,6 +99,13 @@ class _SignInScreenState extends State<SignInScreen> {
                   height: 20,
                 ),
                 CustomTextField(
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                        RegExp("^[\u0000-\u007F]+\$"),
+                      )
+                    ],
+                    obscureText: false,
+                    enableSuggestions: false,
                     controller: _emailController,
                     prefixIcon: Icon(
                       Icons.attach_email_rounded,

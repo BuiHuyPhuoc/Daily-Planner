@@ -1,13 +1,13 @@
 import 'package:daily_planner/class/const_variable.dart';
 import 'package:daily_planner/class/custom_format.dart';
 import 'package:daily_planner/models/person.dart';
+import 'package:daily_planner/screens/sign_in_screen.dart';
 import 'package:daily_planner/services/person_service.dart';
 import 'package:daily_planner/widgets/custom_app_bar.dart';
 import 'package:daily_planner/widgets/custom_text_field.dart';
 import 'package:daily_planner/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -51,6 +51,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           context: context,
           leading: IconButton(
             onPressed: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
               Navigator.pop(context);
             },
             icon: Icon(Icons.arrow_back),
@@ -129,6 +130,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         Icons.attach_email_rounded,
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
+                      enableSuggestions: false,
+                      
                       context: context,
                       hintText: "Email của bạn"),
                   SizedBox(
@@ -187,6 +190,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     context: context,
                     hintText: "Xác nhận mật khẩu",
                     obscureText: _isObscure,
+                    enableSuggestions: false,
                     suffixIcon: IconButton(
                       onPressed: () {
                         setState(() {
@@ -301,6 +305,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ).ShowToast();
       return;
     }
-    // Navigation to Sign in screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (builder) => SignInScreen(email: _email, password: _password),
+      ),
+    );
   }
 }

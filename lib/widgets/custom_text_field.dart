@@ -13,7 +13,9 @@ Widget CustomTextField(
     String? value,
     List<FilteringTextInputFormatter>? inputFormatters,
     String? Function(String?)? validator,
-    bool enable = true}) {
+    bool enable = true,
+    bool enableSuggestions = true,
+    bool autocorrect =  true}) {
   return TextFormField(
     validator: validator,
     inputFormatters: inputFormatters,
@@ -21,8 +23,8 @@ Widget CustomTextField(
     readOnly: readOnly,
     maxLines: maxLines,
     obscureText: obscureText,
-    enableSuggestions: false,
-    autocorrect: false,
+    enableSuggestions: enableSuggestions,
+    autocorrect: autocorrect,
     controller: controller,
     decoration: InputDecoration(
       prefixIcon: prefixIcon,

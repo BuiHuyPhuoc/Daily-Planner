@@ -32,7 +32,7 @@ class AuthService {
           email: email, password: hashPassword);
       return cred.user;
     } catch (e) {
-      print("Something went wrong");
+      print("Something went wrong when sign in");
     }
     return null;
   }

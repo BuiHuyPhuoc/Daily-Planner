@@ -22,7 +22,7 @@ class AuthScreen extends StatelessWidget {
                 child: Text("LỖI"),
               );
             } else {
-              if (snapshot.data == null) {
+              if (!snapshot.hasData) {
                 return WelcomeScreen();
               } else {
                 return NavigationScreen();
