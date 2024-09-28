@@ -13,21 +13,11 @@ class AuthScreen extends StatelessWidget {
         body: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text("LỖI"),
-              );
-            } else {
-              if (!snapshot.hasData) {
+            if (!snapshot.hasData) {
                 return WelcomeScreen();
               } else {
                 return NavigationScreen();
               }
-            }
           },
         ),
       ),

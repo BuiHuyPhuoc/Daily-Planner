@@ -4,31 +4,31 @@ import 'package:daily_planner/screens/auth_screen.dart';
 import 'package:daily_planner/screens/calendar_screen.dart';
 import 'package:daily_planner/screens/setting_screen.dart';
 import 'package:daily_planner/screens/to_do_screen.dart';
+import 'package:daily_planner/screens/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class NavigationScreen extends StatefulWidget {
-  NavigationScreen({super.key, this.currentPagePosition = 1});
-
-  int currentPagePosition;
-
+  NavigationScreen({super.key});
   @override
   State<NavigationScreen> createState() => _NavigationScreenState();
 }
 
 class _NavigationScreenState extends State<NavigationScreen> {
-  late int? currentPagePosition;
+  int? currentPagePosition; // Sửa: Thêm biến lưu vị trí trang hiện tại
   @override
   void initState() {
     super.initState();
-    currentPagePosition = widget.currentPagePosition;
   }
 
   @override
   Widget build(BuildContext context) {
     if (FirebaseAuth.instance.currentUser == null) {
       return AuthScreen();
+    }
+    if (currentPagePosition == null) {
+      currentPagePosition = 1;
     }
     List<Widget> _pages = [CalendarScreen(), ToDoScreen(), SettingScreen()];
     List<Widget> _navigationItems = [
@@ -50,15 +50,11 @@ class _NavigationScreenState extends State<NavigationScreen> {
     ];
     return Scaffold(
       extendBody: true,
-      body: Stack(
-        children: [
-          _pages[currentPagePosition ?? 1],
-        ],
-      ),
+      body: _pages[currentPagePosition!],
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Colors.transparent,
         buttonBackgroundColor: Theme.of(context).colorScheme.primary,
-        index: currentPagePosition ?? 1,
+        index: currentPagePosition!,
         color: Theme.of(context).colorScheme.primary,
         animationDuration: Duration(milliseconds: 400),
         items: _navigationItems,
