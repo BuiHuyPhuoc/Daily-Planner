@@ -1,4 +1,5 @@
 import 'package:daily_planner/class/const_variable.dart';
+import 'package:daily_planner/class/local_notifications.dart';
 import 'package:daily_planner/models/person.dart';
 import 'package:daily_planner/models/task.dart';
 import 'package:daily_planner/models/task_status.dart';
@@ -329,6 +330,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       ).ShowToast();
       return;
     }
+    DateTime schedule = DateTime(_selectedDay.year, _selectedDay.month,
+        _selectedDay.day, _timeStart!.hour, _timeStart!.minute);
+    if (!schedule.isAfter(DateTime.now())) {
+      WarningToast(
+        context: context,
+        message: "Thời gian của công việc đã qua",
+      ).ShowToast();
+      return;
+    }
     // Get logged in user
     final User? getCurrentUser = FirebaseAuth.instance.currentUser;
     // Get user as Person
@@ -366,6 +376,25 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     bool result = await TaskService().createTask(newTask);
     Navigator.pop(context);
     if (result) {
+      DateTime time = DateTime.now().add(Duration(minutes: 14));
+      if (schedule.isAfter(time)) {
+        LocalNotifications.showScheduleNotification(
+          title: "Daily Planner nhắc nhở bạn",
+          body: "Còn 15 phút nữa bắt đầu công việc " + newTask.taskTitle,
+          payload: "Schedule notification",
+          scheduleNotificationDatetime: schedule.add(Duration(minutes: -14)),
+        );
+      } else {
+        if (schedule.isAfter(DateTime.now())) {
+          LocalNotifications.showScheduleNotification(
+            title: "Daily Planner nhắc nhở bạn",
+            body: "Sắp bắt đầu công việc " + newTask.taskTitle,
+            payload: "Schedule notification",
+            scheduleNotificationDatetime:
+                DateTime.now().add(Duration(seconds: 5)),
+          );
+        }
+      }
       SuccessToast(
         context: context,
         message: "Thêm nhiệm vụ thành công",
