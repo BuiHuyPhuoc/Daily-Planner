@@ -2,6 +2,7 @@ import 'package:daily_planner/class/const_variable.dart';
 import 'package:daily_planner/models/person.dart';
 import 'package:daily_planner/screens/auth_screen.dart';
 import 'package:daily_planner/services/person_service.dart';
+import 'package:daily_planner/widgets/custom_app_bar.dart';
 import 'package:daily_planner/widgets/custom_text_field.dart';
 import 'package:daily_planner/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,8 @@ class _SignInScreenState extends State<SignInScreen> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         resizeToAvoidBottomInset: true,
-        appBar: AppBar(
+        appBar: CustomAppBar(
+          context: context,
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);

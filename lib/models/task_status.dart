@@ -34,7 +34,7 @@ class TaskStatus {
   factory TaskStatus.fromJson(String source) => TaskStatus.fromMap(json.decode(source) as Map<String, dynamic>);
 
 
-  TaskStatus getLastStatus() {
+  TaskStatus getNextStatus() {
     String nextStatus = "";
     switch (status) {
       case "Khởi tạo":

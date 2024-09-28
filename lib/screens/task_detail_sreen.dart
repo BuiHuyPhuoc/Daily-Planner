@@ -8,6 +8,7 @@ import 'package:daily_planner/services/task_service.dart';
 import 'package:daily_planner/widgets/custom_app_bar.dart';
 import 'package:daily_planner/widgets/custom_text_field.dart';
 import 'package:daily_planner/widgets/custom_toast.dart';
+import 'package:daily_planner/widgets/time_picker_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -133,6 +134,7 @@ class _TaskDetailSreenState extends State<TaskDetailSreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: CustomAppBar(
           context: context,
           leading: IconButton(
@@ -293,7 +295,7 @@ class _TaskDetailSreenState extends State<TaskDetailSreen> {
                   child: TimePickerButton(
                     context: context,
                     title: "Giờ bắt đầu",
-                    isDisable: !_isEdittingMode,
+                    isDisable: true,
                     onTap: (timeOfDay) {
                       if (timeOfDay != null) {
                         setState(() {
@@ -309,7 +311,7 @@ class _TaskDetailSreenState extends State<TaskDetailSreen> {
                   child: TimePickerButton(
                     context: context,
                     title: "Giờ kết thúc",
-                    isDisable: !_isEdittingMode,
+                    isDisable: true,
                     onTap: (timeOfDay) {
                       if (timeOfDay != null) {
                         setState(() {
@@ -397,7 +399,7 @@ class _TaskDetailSreenState extends State<TaskDetailSreen> {
                       color: Theme.of(context)
                           .colorScheme
                           .primaryContainer
-                          .withOpacity(0.2),
+                          .withOpacity(0.3),
                       borderRadius: BorderRadius.circular(10)),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -413,7 +415,7 @@ class _TaskDetailSreenState extends State<TaskDetailSreen> {
                         children: <Widget>[
                           Icon(
                             Icons.calendar_month,
-                            color: Theme.of(context).colorScheme.primary,
+                            //color: Theme.of(context).colorScheme.primary,
                             size: 30,
                           ),
                           SizedBox(
@@ -584,7 +586,7 @@ class _TaskDetailSreenState extends State<TaskDetailSreen> {
   }
 
   Widget ChangeStatusButton() {
-    TaskStatus nextStatus = _task!.getLastStatus().getLastStatus();
+    TaskStatus nextStatus = _task!.getLastStatus().getNextStatus();
     return Row(
       children: <Widget>[
         Expanded(
@@ -622,7 +624,9 @@ class _TaskDetailSreenState extends State<TaskDetailSreen> {
         ),
         Expanded(
           child: GestureDetector(
-            onTap: () async {},
+            onTap: () async {
+              ChangeStatus(nextStatus);
+            },
             child: Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(vertical: 12),
@@ -643,95 +647,6 @@ class _TaskDetailSreenState extends State<TaskDetailSreen> {
           ),
         )
       ],
-    );
-  }
-}
-
-class TimePickerButton extends StatefulWidget {
-  TimePickerButton(
-      {super.key,
-      required this.context,
-      required this.onTap,
-      this.isDisable = false,
-      required this.title,
-      this.time});
-
-  final Function(TimeOfDay?) onTap; // Callback khi chọn ngày
-  final bool isDisable;
-  final String title;
-  final TimeOfDay? time;
-  final BuildContext context;
-
-  @override
-  State<TimePickerButton> createState() => _TimePickerButtonState();
-}
-
-class _TimePickerButtonState extends State<TimePickerButton> {
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        if (widget.isDisable) {
-          NotifyToast(
-            context: context,
-            message: "Chế độ chỉnh sửa đang tắt",
-          ).ShowToast();
-          return;
-        } else {
-          showTimePicker(
-            context: context,
-            initialTime: TimeOfDay.now(),
-          ).then((value) {
-            if (value != null) {
-              return widget.onTap(value);
-            } else {
-              return widget.onTap(null);
-            }
-          });
-        }
-      },
-      child: Container(
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            width: 1,
-            color: Theme.of(context).colorScheme.outline,
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Icon(
-              Icons.access_time_rounded,
-              color: Theme.of(context).colorScheme.onSurface,
-              size: 30,
-            ),
-            SizedBox(width: 5),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  widget.title,
-                  style: PrimaryTextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-                (widget.time != null)
-                    ? Text(
-                        widget.time!.format(context).toString(),
-                        style: PrimaryTextStyle(fontSize: 16),
-                      )
-                    : Container()
-              ],
-            )
-          ],
-        ),
-      ),
     );
   }
 }
