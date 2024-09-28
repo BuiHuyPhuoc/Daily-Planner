@@ -382,7 +382,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           title: "Daily Planner nhắc nhở bạn",
           body: "Còn 15 phút nữa bắt đầu công việc " + newTask.taskTitle,
           payload: "Schedule notification",
-          scheduleNotificationDatetime: schedule.add(Duration(minutes: -14)),
+          scheduleNotificationDatetime: schedule.add(Duration(minutes: -15)),
         );
       } else {
         if (schedule.isAfter(DateTime.now())) {
