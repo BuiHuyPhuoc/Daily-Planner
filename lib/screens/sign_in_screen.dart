@@ -3,6 +3,7 @@
 import 'package:daily_planner/class/const_variable.dart';
 import 'package:daily_planner/models/person.dart';
 import 'package:daily_planner/screens/auth_screen.dart';
+import 'package:daily_planner/screens/navigation_screen.dart';
 import 'package:daily_planner/services/person_service.dart';
 import 'package:daily_planner/widgets/custom_app_bar.dart';
 import 'package:daily_planner/widgets/custom_text_field.dart';

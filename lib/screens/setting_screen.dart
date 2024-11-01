@@ -194,8 +194,6 @@ class _SettingScreenState extends State<SettingScreen> {
   Widget ChangeColorThemeButton(BuildContext context, int themeIndex) {
     return GestureDetector(
       onTap: () {
-        // Lưu chỉ số `ColorScheme` và cập nhật giao diện ngay lập tức
-        // Thay đổi `ColorScheme` và cập nhật giao diện
         Provider.of<ThemeProvider>(context, listen: false)
             .changeColorScheme(themeIndex);
       },
